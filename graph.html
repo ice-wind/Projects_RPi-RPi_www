@@ -1,0 +1,49 @@
+
+<html>
+<head>
+    <title>JSON TEST</title>
+    <script src="../Graph/js/jquery-1.11.3.js"></script>  <!-- make sure jquery is available! -->
+    <script src="../Graph/canvas/canvasjs.min.js"></script>
+     <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON("get_data.php", function (result) {
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    zoomEnabled: true,
+                    axisX:{      
+                              valueFormatString: "DD-MMM" ,
+                              labelAngle: -50
+                          },
+                    data: [  {  type: "line",
+                                dataPoints: result  
+                              }    ]
+                });
+                chart.render();
+            });
+        
+		var yVal = 15, updateCount = 2;
+		var updateChart = function () {
+
+			yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+			updateCount++;
+			
+			dataPoints.push({
+				y : yVal
+			});
+			
+			chart.options.title.text = "Update " + updateCount;
+			chart.render();    
+		
+		};
+		
+		setInterval(function(){updateChart()}, 1000);
+		});
+		
+    </script>
+</head>
+<body>
+	<h3>erg</h3>
+    <h2>dbdSimple test of CanvasJS using JSON encoded data</h2>
+    <div id="chartContainer" style="width: 800px; height: 380px;"></div>  
+</body>
+</html>
+ 

@@ -1,0 +1,77 @@
+
+<html>
+<head>
+    <title>JSON TEST</title>
+    <script src="../Graph/js/jquery-1.11.3.js"></script>  <!-- make sure jquery is available! -->
+    <script src="../Graph/canvas/canvasjs.min.js"></script>
+     <script type="text/javascript">
+	 var data = [{y : 10}, {y : 13}, {y : 18}, {y : 20}, {y : 1}];
+        $(document).ready(function () {
+            $.getJSON("get_data.php", function (result) {
+			    $.each(result, function(i,field){
+					$("div").append(field.label +" : "+field.y +" /-/");
+					data.push({y:field.y,label:field.label}) 
+				});
+                var chart = new CanvasJS.Chart("chartContainer", {
+					zoomEnabled: true,
+					axisX:{
+							title:"Time",
+							labelAngle: -45
+							},
+					axisY:{
+							title:"axis Y",
+							},
+                    title:{      
+                              text: "Add & Update dataPoints"
+                          },
+                    data: [  
+							{  type: "spline",
+                               dataPoints: data
+                             }]
+                });
+                chart.render();
+            
+        var updateChart = function(){
+			$.getJSON("isFile.php",function(result){	
+				$.each(result,function(i,field){
+					//$("div").append(field.label +":=>"+field.y+"-------//");
+					//alert(field.y);
+					data.push({y:field.y,label:field.label});
+					chart.render();
+				});
+			});
+		};
+		
+		
+		var yVal = 15, updateCount = 0;
+		var randUpdateChart = function () {
+			
+			yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+			updateCount++;
+			data.push({
+				y : yVal
+			});
+			chart.options.title.text = "Update "+updateCount ;
+			if(updateCount > 5760)   // every 30sec for 2 days
+			{	
+				data.shift();
+			}
+			chart.render();   
+			alert(updateCount);
+		};
+		//updateChart();
+		setInterval(function(){updateChart()}, 4000);
+		//setInterval(function () {alert("Hello")}, 3000);
+		});
+		});
+		
+		
+    </script>
+</head>
+<body>
+	<h3>erdbg</h3>
+    <h2>dbdSimple test of CanvasJS using JSON encoded data</h2>
+    <div id="chartContainer" style="width: 800px; height: 380px;"></div> 
+</body>
+</html>
+ 
