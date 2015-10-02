@@ -1,0 +1,280 @@
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+	<title>Get_forecast_data</title>
+	<script src="../Graph/js/jquery-1.11.3.js"></script> 
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+	<script type="text/javascript">
+	var chart;
+		function loadJSON(callback){
+			$.getJSON("getDBdata_5Day.php",function(result){	
+					callback(result);
+
+			});
+		}
+		function addJSONpoint(callback){
+			$.getJSON("add_point.php",function(result){	
+					callback(result);
+
+			});
+		}
+		
+		Highcharts.setOptions({
+			global: {
+				timezoneOffset: -2 * 60
+			}
+		});
+		
+		$(document).ready(function(){
+			loadJSON(function(data){
+				var options = {
+					chart: {
+						renderTo: 'container',
+						type: 'spline',
+						zoomType:'x'
+					},
+					global: {
+						 timezoneOffset: 6 * 60
+					},
+					title: {
+						text: 'Forecast for 5 Days'
+					},
+					xAxis: {
+						type: 'datetime',
+						ordinal: false,
+						crosshair:true,
+						gridLineWidth:1
+					},
+					yAxis: [{
+						gridLineWidth:1,
+						minorTickInterval: 'auto',
+						title: {
+							text: 'Temperature',
+							style: {
+								color: '#d1240a'
+								}
+						},
+						labels:{
+							format: '{value} °C',
+							style:{
+								color:'#d1240a'
+							}
+						},
+						opposite: false,
+						plotBands:[{
+							
+						}]
+						
+					},{//Sec yAxis
+						gridLineWidth:1,
+						TickInterval: 'auto',
+						title:{
+							text: 'Hum',
+							style: {
+								color: '#00AEC2'
+							}
+						},
+						labels:{
+							format: '{value} %',
+							style:{
+								color: '#00AEC2'
+								}
+						},
+						opposite: true,
+						},{//Third
+						gridLineWidth: 1,
+						TickInterval: 'auto',
+						title:{
+								text: 'Press',
+								style:{
+									color: '#c69b01'
+									}
+								},
+								labels:{
+									format: '{value} Pa',
+									style:{
+										color: '#c69b01'
+										}	
+								},
+						opposite: true
+
+					},{//Third
+						gridLineWidth: 1,
+						TickInterval: 'auto',
+						title:{
+								text: 'Rain-Fall',
+								style:{
+									color: 'blue'
+									}
+								},
+								labels:{
+									format: '{value} mm',
+									style:{
+										color: 'blue'
+										}	
+								},
+						opposite: false
+
+					}],
+					
+					tooltip:{
+						useHTML: true,
+						formatter: function(){
+							var tooltip_all = '';
+							var description = '';
+								
+								temp_picture_url = '<img src="img/Temp.png" title="" alt="" border="1" height="25" width="22" align="center">';
+								hum_picture_url = '<img src="img/Hum.png" title="" alt="" border="1" height="25" width="22" align="center">';
+								press_picture_url = '<img src="img/Press.png" title="" alt="" border="1" height="25" width="22" align="center">';
+							if(this.series.name == "Temp"){
+												description = '<b>Situation: </b>'+this.point.w_desc;
+								tooltip_all = 	[Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>'+
+												description+'<br /><table border="1" style="width:100%"><tr><td>'+temp_picture_url+'Temperature</td><td>'+Highcharts.numberFormat(this.y, 2)+'</td></tr>'+
+												'<tr><td>'+hum_picture_url+'Humidity</td><td>'+Highcharts.numberFormat(this.point.humidity, 2)+'</td></tr>'+
+												'<tr><td>'+press_picture_url+'Pressure</td><td>'+Highcharts.numberFormat(this.point.pressure, 2)+'</td></tr>'+
+												'</table>']
+							}
+								
+							
+								return tooltip_all
+								//'<b>' + this.series.name + '</b><br/>' + 
+								
+								
+						}					
+					},
+					
+					plotOptions:{
+						areaspline:{
+							fillOpacity:0.1
+						},
+						spline:{
+							states:{
+								hover:{
+									lineWidth:4
+								}
+							}
+						}
+					},
+					series: [{
+						
+						name: 'Temp',
+						type: 'spline',
+						yAxis: 0,
+						data: (function(){
+								var temp_in_data = [];
+								$.each(data,function(i,field){							
+									var i ={};
+									i={x:field.time,y:field.Temperature,w_desc:field.Weather_description,w_icon:field.Weather_icon,w_main:field.Weather_main,humidity:field.Humidity,pressure:field.Pressure};
+									temp_in_data.push(i);
+								});
+								console.log(temp_in_data);
+							return temp_in_data;
+						})(),
+						dataLabels:{
+								enabled:true,
+								useHTML:true,
+								formatter:function(){
+									 return '<span>'+this.point.w_icon+'</span><br/><br />';
+									//return '<img src="http://highcharts.com/demo/gfx/sun.png"><img>&nbsp;';
+								}
+							},
+						color: '#FF3D8B',
+						negativeColor: '#CCFFFF'
+					},{
+						name:'Hum',
+						type: 'areaspline',
+						yAxis: 1,
+						data: (function(){
+								var hum_in_data = [];
+								$.each(data,function(i,field){							
+									var i ={};
+									i={x:field.time,y:field.Humidity};
+									hum_in_data.push(i);
+								});
+								console.log(hum_in_data);
+							return hum_in_data;
+						})(),
+						tooltip:{
+							valueSuffix: '%'
+						},
+						dashStyle: 'shortdashdot',
+						color:'#D1F6FF',
+						marker:{
+							enabled: false,
+							symbol: 'circle',
+							radius: 2,
+							states:{
+								hover:{
+									enabled:true
+								}
+							}
+						}
+					},{
+						name: 'Press',
+						type: 'spline',
+						yAxis:2,
+						data: (function(){
+								var press_in_data = [];
+								$.each(data,function(i,field){							
+									var i ={};
+									i={x:field.time,y:field.Pressure};
+									press_in_data.push(i);
+								});
+								console.log(press_in_data);
+							return press_in_data;
+						})(),
+						color:'#FFFF8F',
+						tooltip:{
+							valueSuffix:'Pa'
+						}
+					},{
+						name: 'Rain-Fall',
+						type: 'column',
+						yAxis:3,
+						data: (function(){
+								var press_in_data = [];
+								$.each(data,function(i,field){							
+									var i ={};
+									i={x:field.time,y:field.Rain};
+									press_in_data.push(i);
+								});
+								console.log(press_in_data);
+							return press_in_data;
+						})(),
+						color:'blue'
+						
+					}]
+				}
+				//console.log(data);
+			chart = new Highcharts.Chart(options);
+			//console.log(chart.series[0]);
+			
+			
+			});
+				/*
+				setInterval(function(){
+					console.log("Retrieving data from server ");
+					var url = "add_point.php";
+					
+					$.getJSON(url,function(data){
+						var series = $('#container').highcharts().series[0];
+						var shift_points = false;
+						if (series.data.length>=240){
+							shift_points = true;
+							}
+						//console.log(series);
+						series.addPoint(data[0],false,shift_points);
+						 $('#container').highcharts().redraw();
+					});
+				},5000);
+				*/
+		});
+	</script>
+</head>
+<body>
+	<div id='container'>h</div>
+	
+</body>
+</html>
