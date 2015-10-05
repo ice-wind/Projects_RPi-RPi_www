@@ -13,13 +13,14 @@
       die("Connection failed: " . $conn->connect_error);
   }
   // prepare and bind
-  $stmt = $conn->prepare("INSERT INTO forecast_data (DT,DT_TXT,CLOUDS_ALL,GRND_LEVEL,HUMIDITY,PRESSURE,SEA_LEVEL,TEMPERATURE,TEMPERATURE_MAX,TEMPERATURE_MIN,RAIN,WEATHER_DESCRIPTION,WEATHER_ICON,WEATHER_MAIN,WIND_DEG,WIND_SPEED)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt = $conn->prepare("INSERT INTO forecast_data (DT,DT_TXT,CLOUDS_ALL,GRND_LEVEL,HUMIDITY,PRESSURE,SEA_LEVEL,TEMPERATURE,TEMPERATURE_MAX,TEMPERATURE_MIN,RAIN,SNOW,WEATHER_DESCRIPTION,WEATHER_ICON,ICON_ID,WEATHER_MAIN,WIND_DEG,WIND_SPEED)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   
-$stmt->bind_param("ssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMIDITY,$PRESSURE,$SEA_LEVEL,$TEMPERATURE,$TEMPERATURE_MAX,$TEMPERATURE_MIN,$RAIN,$WEATHER_DESCRIPTION,$WEATHER_ICON,$WEATHER_MAIN,$WIND_DEG,$WIND_SPEED);
+$stmt->bind_param("ssssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMIDITY,$PRESSURE,$SEA_LEVEL,$TEMPERATURE,$TEMPERATURE_MAX,$TEMPERATURE_MIN,$RAIN,$SNOW,$WEATHER_DESCRIPTION,$WEATHER_ICON,$ICON_ID,$WEATHER_MAIN,$WIND_DEG,$WIND_SPEED);
   
-  $jsondata = file_get_contents('http://api.openweathermap.org/data/2.5/forecast/city?id=3060972&APPID=42b4a1a0b8ea3a847fedd3c183ab4f2b&cnt=14');
+  $jsondata = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?id=3060972&APPID=42b4a1a0b8ea3a847fedd3c183ab4f2b&units=metric&mode=json');
   $data = json_decode($jsondata, true);
   $RAIN = 0;
+  $SNOW = 0;
   foreach($data['list'] as $item)
     {
       $DT = $item['dt'];
@@ -47,6 +48,18 @@ $stmt->bind_param("ssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMIDI
 	{
 	$RAIN = 0;
 	} 	
+	if(array_key_exists('snow',$item)){
+		if(array_key_exists('3h',$item['snow']))
+		{
+		$SNOW = $item['snow']['3h'];
+		}else
+		{
+		$SNOW = 0;
+		}
+	}else
+	{
+	$SNOW = 0;
+	}
 
       $WIND_DEG = $item['wind']['deg'];
       $WIND_SPEED = $item['wind']['speed'];
@@ -54,6 +67,7 @@ $stmt->bind_param("ssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMIDI
           {
                 $WEATHER_DESCRIPTION = $info['description'];
                 $WEATHER_ICON = $info['icon'];
+				$ICON_ID = $info['id']
                 $WEATHER_MAIN = $info['main'];
 echo($WEATHER_MAIN);
           }
