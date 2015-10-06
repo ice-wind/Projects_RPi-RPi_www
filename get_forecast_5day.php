@@ -1,9 +1,9 @@
 <?php
   echo "start"; 
   $servername = "localhost";
-  $username = "forecast_user";
-  $password = "forecast";
-  $dbname = "forecast";
+  $username = "Temp_user";
+  $password = "temp";
+  $dbname = "graph_data";
 
   
   // Create connection
@@ -12,15 +12,25 @@
   if ($conn->connect_error) {
       die("Connection failed: " . $conn->connect_error);
   }
+  $CITY_ID = "3060972";
   // prepare and bind
-  $stmt = $conn->prepare("INSERT INTO forecast_data (DT,DT_TXT,CLOUDS_ALL,GRND_LEVEL,HUMIDITY,PRESSURE,SEA_LEVEL,TEMPERATURE,TEMPERATURE_MAX,TEMPERATURE_MIN,RAIN,SNOW,WEATHER_DESCRIPTION,WEATHER_ICON,ICON_ID,WEATHER_MAIN,WIND_DEG,WIND_SPEED)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	$delete = $conn->prepare("DELETE FROM forecast_data_5day WHERE cityid=?");
+	$stmt = $conn->prepare("INSERT INTO forecast_data_5day (DT,DT_TXT,CLOUDS_ALL,GRND_LEVEL,HUMIDITY,PRESSURE,SEA_LEVEL,TEMPERATURE,TEMPERATURE_MAX,TEMPERATURE_MIN,RAIN,SNOW,WEATHER_DESCRIPTION,WEATHER_ICON,ICON_ID,WEATHER_MAIN,WIND_DEG,WIND_SPEED)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   
-$stmt->bind_param("ssssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMIDITY,$PRESSURE,$SEA_LEVEL,$TEMPERATURE,$TEMPERATURE_MAX,$TEMPERATURE_MIN,$RAIN,$SNOW,$WEATHER_DESCRIPTION,$WEATHER_ICON,$ICON_ID,$WEATHER_MAIN,$WIND_DEG,$WIND_SPEED);
+	$delete->bind_param("s",$CITY_ID);
+	$stmt->bind_param("ssssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMIDITY,$PRESSURE,$SEA_LEVEL,$TEMPERATURE,$TEMPERATURE_MAX,$TEMPERATURE_MIN,$RAIN,$SNOW,$WEATHER_DESCRIPTION,$WEATHER_ICON,$ICON_ID,$WEATHER_MAIN,$WIND_DEG,$WIND_SPEED);
   
-  $jsondata = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?id=3060972&APPID=42b4a1a0b8ea3a847fedd3c183ab4f2b&units=metric&mode=json');
+  $url = 'http://api.openweathermap.org/data/2.5/forecast?id=';
+  $url .= '3060972';
+  $url .= '&APPID=42b4a1a0b8ea3a847fedd3c183ab4f2b&units=metric&mode=json';
+  
+  $jsondata = file_get_contents($url);
   $data = json_decode($jsondata, true);
   $RAIN = 0;
   $SNOW = 0;
+  //----------------------DELETE PREVIOUS DATA----------------------------
+  $delete->execute();
+  
   foreach($data['list'] as $item)
     {
       $DT = $item['dt'];
@@ -30,12 +40,9 @@ $stmt->bind_param("ssssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMI
       $HUMIDITY = $item['main']['humidity'];
       $PRESSURE = $item['main']['pressure'];
       $SEA_LEVEL = $item['main']['sea_level'];
-      $TEMPERATURE = $item['main']['temp'] ;
-      $TEMPERATURE = $TEMPERATURE;
+      $TEMPERATURE = $item['main']['temp'];
       $TEMPERATURE_MAX = $item['main']['temp_max'];
-      $TEMPERATURE_MAX = $TEMPERATURE_MAX;
       $TEMPERATURE_MIN = $item['main']['temp_min'];
-      $TEMPERATURE_MIN = $TEMPERATURE_MIN;
 	if(array_key_exists('rain',$item)){
 		if(array_key_exists('3h',$item['rain']))
 		{
@@ -67,7 +74,7 @@ $stmt->bind_param("ssssssssssssssssss",$DT,$DT_TXT,$CLOUDS_ALL,$GRND_LEVEL,$HUMI
           {
                 $WEATHER_DESCRIPTION = $info['description'];
                 $WEATHER_ICON = $info['icon'];
-				$ICON_ID = $info['id']
+				$ICON_ID = $info['id'];
                 $WEATHER_MAIN = $info['main'];
 echo($WEATHER_MAIN);
           }
