@@ -18,7 +18,7 @@
 $stmt->bind_param("sssss",$ID,$NAME,$COUNTRY,$COORD_LON,$COORD_LAT);
 //----------------------------INIT-----------------------------------------
 	ini_set('memory_limit', '-1');
-	ini_set('max_execution_time', 12000);  // time of possible execution  - 300 is 5 min
+	ini_set('max_execution_time', 15000);  // time of possible execution  - 300 is 5 min
 //-------------------------------END INIT------------------------------------
   $json = file_get_contents('C:\Users\vargar\Downloads\city.list (2).json\city.list.json');
   
