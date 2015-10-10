@@ -1,0 +1,53 @@
+<HTML>
+	<HEAD>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+		<title>Dropdown test</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		
+		<script>
+		$(document).ready(function () {
+			$('body').on('click','.city',function(){
+				$(this).hide();
+			});
+		});
+			
+			function passCityData(object){
+				var city_id = object.getAttribute("data-ID");
+				var city_name = object.innerHTML;
+				//alert(city_name +" is a " + city_id + ".");
+				$(".search").val(city_name);
+			}
+			
+			function showResult(str){
+				var citylist="";
+				$.ajax({
+					type: 	"GET",
+					url:	"livesearch.php",
+					data: 	{search_string:str},
+					success:function(response){
+						response=JSON.parse(response);
+						$.each(response,function(i,data){
+							console.log(data.NAME)
+						citylist+='<div class="city" onclick="passCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
+						});
+						$("#livesearch").html(citylist);
+					},
+					send:	function(event,xhr,option){
+						$("#livesearch").append("<img src='/img/loading.gif'>");
+					},
+					start:	function(){	
+					}
+				});
+			}
+		</script>
+	</HEAD>
+	<BODY>
+		<div class="base_class">
+			<form autocomplete="on">
+				<input class="search" type="search" size="30" onkeyup="showResult(this.value)" autofocus >
+				<div id="livesearch"></div>
+			</form>
+		</div>
+	</BODY>
+</HTML>
