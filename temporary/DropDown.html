@@ -3,50 +3,152 @@
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<title>Dropdown test</title>
+		<link rel="stylesheet" type="text/css" href="css/search_style.css">
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		
 		<script>
 		$(document).ready(function () {
-			$('body').on('click','.city',function(){
-				$(this).hide();
+			$('body').on('click','*',function(){
+				$("#livesearch").slideUp();
 			});
-		});
+			/*
+			$("body").on("change",".search",function(){
+				var city_name = $(".search").val();
+				var city_id = $(".city").val(city_name);
+				var city_id = $(city_id[0].outerHTML)[0].getAttribute("data-ID");
+				console.log(" id: "+city_id+" city :"+city_name);
+				//$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
+			});
+			*/
 			
+			
+			
+			
+		});
+		
+		function handle(e){
+				
+				if(e.keyCode === 13){
+					e.preventDefault();									//--------------------important!!!
+					var city_name = $(".search").val();
+					if($(".city")[0]){
+						var city_id = $(".city").val(city_name);
+						var city_id = $(city_id[0].outerHTML)[0].getAttribute("data-ID");
+						console.log(" id: "+city_id+" city :"+city_name);
+						$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
+					}
+					//alert("Enter was pressed was presses");
+				}else{
+					showResult();
+				}
+
+				return false;
+			}
+
 			function passCityData(object){
 				var city_id = object.getAttribute("data-ID");
 				var city_name = object.innerHTML;
 				//alert(city_name +" is a " + city_id + ".");
 				$(".search").val(city_name);
+				$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 			}
 			
-			function showResult(str){
-				var citylist="";
+			function getForecastData(city_id,city_name){
+			console.log("START GET fore city id: "+city_id);
 				$.ajax({
 					type: 	"GET",
-					url:	"livesearch.php",
-					data: 	{search_string:str},
+					url:	"php/getDBdata_5Day.php",
+					dataType: "json",
+					data:	{city_id:city_id},
 					success:function(response){
-						response=JSON.parse(response);
-						$.each(response,function(i,data){
-							console.log(data.NAME)
-						citylist+='<div class="city" onclick="passCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
+					
+					//alert(response);
+						//if($(".result").css("display")!=='none')
+						console.log("before fade ");
+						$(".result").fadeOut("fast",function(){
+						console.log("inside fade ");
+						console.log(response+"sdv");
+						$(".result").fadeIn("fast",function(){
+						
+						console.log("after fade ");
+						
+							$(".result").html("");
+								$.each(response,function(i,value){
+									$(".result").append("<div>Temperature : "+value.Temperature+"</div>");
+								console.log(value.Temperature);
+								});
 						});
-						$("#livesearch").html(citylist);
+						});
+						
 					},
-					send:	function(event,xhr,option){
-						$("#livesearch").append("<img src='/img/loading.gif'>");
+					error: function(jqXHR, exception) {
+						console.log(jqXHR);
+						if (jqXHR.status === 0) {
+							alert('Not connect.\n Verify Network.');
+						} else if (jqXHR.status == 404) {
+							alert('Requested page not found. [404]');
+						} else if (jqXHR.status == 500) {
+							alert('Internal Server Error [500].');
+						} else if (exception === 'parsererror') {
+							alert('Requested JSON parse failed.');
+						} else if (exception === 'timeout') {
+							alert('Time out error.');
+						} else if (exception === 'abort') {
+							alert('Ajax request aborted.');
+						} else {
+							alert('Uncaught Error.\n' + jqXHR.responseText);
+						}
+					  
 					},
-					start:	function(){	
+					stop:function(){
+						alert("Stop");
 					}
+					
 				});
+				return false;
 			}
+			
+			function showResult(){
+				var citylist="";
+				var str = $(".search").val();
+				if(str!=null){
+					$.ajax({
+						type: 	"GET",
+						url:	"php/livesearch.php",
+						data: 	{search_string:str},
+						success:function(response){
+							if(response!=null){
+								response=JSON.parse(response);
+								$.each(response,function(i,data){
+									//console.log(data.NAME)
+								citylist+='<div class="city" id="moj" onclick="passCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
+								});
+							}
+							$("#livesearch").slideDown();
+							$("#livesearch").html(citylist);
+						},
+						send:	function(event,xhr,option){
+							$("#livesearch").slideDown();
+							$("#livesearch").append("<img src='img/loading.gif'>");
+						},
+						error:  function(event,xhr,options,exception){
+							console.log("xhr: "+xhr+"  options: "+options+"  Exception: "+exception);
+							alert(xhr);
+						}
+					});
+				}
+				return false;
+			}
+			
+			 
 		</script>
 	</HEAD>
 	<BODY>
 		<div class="base_class">
-			<form autocomplete="on">
-				<input class="search" type="search" size="30" onkeyup="showResult(this.value)" autofocus >
+			<form autocomplete="on" id="search">
+				<input class="search" type="search" size="30"  onkeypress="handle(event);" autofocus placeholder="Search..." >
 				<div id="livesearch"></div>
+				<div class="result"></div>
 			</form>
 		</div>
 	</BODY>

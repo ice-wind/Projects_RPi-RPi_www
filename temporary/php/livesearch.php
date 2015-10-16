@@ -7,7 +7,7 @@
 
   $q=$_GET["search_string"];
   $response=[];
-	if(strlen($q)){
+	
 	
 		$conn = new mysqli($servername, $username, $password, $dbname);
 		if ($conn->connect_error) {
@@ -22,20 +22,31 @@
 		$select_city->bind_result($CITY_ID,$CITY_NAME);
 		$select_city->store_result();
 		$count=0;
-		while($select_city->fetch()){
-		
-			if (!stristr($CITY_NAME,$q)==false){
-				
+		if(strlen($q)==0){
+			while($select_city->fetch()){
 				$a=array("NAME"=>$CITY_NAME,"ID"=>$CITY_ID);
-				//$a=array($count++ => $a);
-				array_push($response,$a);
-			}		
+				array_push($response,$a);	
+			}
+		
+		}else{
+		
+			while($select_city->fetch()){
+			
+				if (!stristr($CITY_NAME,$q)==false){
+					
+					$a=array("NAME"=>$CITY_NAME,"ID"=>$CITY_ID);
+					//$a=array($count++ => $a);
+					array_push($response,$a);
+				}		
+			}
 		}
 		//$response.="";
 		echo (json_encode($response));
 		$select_city->free_result();
 		$select_city->close();
 	
-	}else
-		echo "city ...";
+	
+	
+	//pass cities from DB
 ?>
+
