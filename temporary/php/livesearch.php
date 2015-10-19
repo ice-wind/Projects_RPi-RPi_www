@@ -32,7 +32,7 @@
 		
 			while($select_city->fetch()){
 			
-				if (!stristr($CITY_NAME,$q)==false){
+				if (!isSubstring($CITY_NAME,$q)==false){
 					
 					$a=array("NAME"=>$CITY_NAME,"ID"=>$CITY_ID);
 					//$a=array($count++ => $a);
@@ -45,6 +45,26 @@
 		$select_city->free_result();
 		$select_city->close();
 	
+	//compare from first letter
+	function isSubstring($first,$second){
+		
+		$firstLength = strlen($first);
+		$secondLength = strlen($second);
+		$first = strtolower($first);
+		$second = strtolower($second);
+		if($secondLength<=$firstLength){
+			$i=0;
+				while($first[$i]==$second[$i]){	
+					if($i===$secondLength-1){
+						return true;
+					}else{
+						$i++;
+					}
+				}
+				return false;		
+		}
+		return false;
+	}
 	
 	
 	//pass cities from DB

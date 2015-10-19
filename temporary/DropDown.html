@@ -7,9 +7,15 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		
 		<script>
+		var elementSearchBoxValue ;
+		
 		$(document).ready(function () {
 			$('body').on('click','*',function(){
 				$("#livesearch").slideUp();
+			});
+			
+			$("form").submit(function(e){
+				e.preventDefault();
 			});
 			/*
 			$("body").on("change",".search",function(){
@@ -27,34 +33,30 @@
 		});
 		
 		function handle(e){
-				
-				if(e.keyCode === 13){
-					e.preventDefault();									//--------------------important!!!
+				if(e.which === 13){
+					//e.preventDefault();									//--------------------important!!!
 					var city_name = $(".search").val();
 					if($(".city")[0]){
 						var city_id = $(".city").val(city_name);
 						var city_id = $(city_id[0].outerHTML)[0].getAttribute("data-ID");
-						console.log(" id: "+city_id+" city :"+city_name);
 						$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 					}
-					//alert("Enter was pressed was presses");
+				}else 
+					if(e.which == 8){
+						$(".search").val("");
 				}else{
 					showResult();
 				}
-
-				return false;
 			}
 
 			function passCityData(object){
 				var city_id = object.getAttribute("data-ID");
 				var city_name = object.innerHTML;
-				//alert(city_name +" is a " + city_id + ".");
 				$(".search").val(city_name);
 				$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 			}
 			
 			function getForecastData(city_id,city_name){
-			console.log("START GET fore city id: "+city_id);
 				$.ajax({
 					type: 	"GET",
 					url:	"php/getDBdata_5Day.php",
@@ -62,15 +64,11 @@
 					data:	{city_id:city_id},
 					success:function(response){
 					
-					//alert(response);
-						//if($(".result").css("display")!=='none')
 						console.log("before fade ");
 						$(".result").fadeOut("fast",function(){
 						console.log("inside fade ");
 						console.log(response+"sdv");
 						$(".result").fadeIn("fast",function(){
-						
-						console.log("after fade ");
 						
 							$(".result").html("");
 								$.each(response,function(i,value){
@@ -109,8 +107,13 @@
 			}
 			
 			function showResult(){
-				var citylist="";
+				var cityList="";
+				var wrapper_cityList;
+				var firstCity="";
+				var searchBox = document.getElementsByClassName("search")[0];
+				
 				var str = $(".search").val();
+				console.log(str);
 				if(str!=null){
 					$.ajax({
 						type: 	"GET",
@@ -120,12 +123,20 @@
 							if(response!=null){
 								response=JSON.parse(response);
 								$.each(response,function(i,data){
-									//console.log(data.NAME)
-								citylist+='<div class="city" id="moj" onclick="passCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
+									if(i==0){firstCity=data.NAME}
+									cityList+='<div class="city" onclick="passCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
 								});
+								
+								var suggestion =firstCity;
+								console.log(suggestion);
+								searchBox.value = suggestion;
+								
+								searchBox.setSelectionRange(str.length,suggestion.length);
+								searchBox.focus();
 							}
+							wrapper_cityList='<div class="wrapper_cityList">'+cityList+'</div>';
 							$("#livesearch").slideDown();
-							$("#livesearch").html(citylist);
+							$("#livesearch").html(wrapper_cityList);
 						},
 						send:	function(event,xhr,option){
 							$("#livesearch").slideDown();
@@ -139,14 +150,13 @@
 				}
 				return false;
 			}
-			
 			 
 		</script>
 	</HEAD>
 	<BODY>
 		<div class="base_class">
 			<form autocomplete="on" id="search">
-				<input class="search" type="search" size="30"  onkeypress="handle(event);" autofocus placeholder="Search..." >
+				<input class="search" type="search" size="30"  onkeyup="handle(event);" data-search="" autofocus placeholder="Search..." >
 				<div id="livesearch"></div>
 				<div class="result"></div>
 			</form>
