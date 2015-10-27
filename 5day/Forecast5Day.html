@@ -10,6 +10,7 @@
 	<script src="http://code.highcharts.com/modules/exporting.js"></script>
 	<script src="http://code.highcharts.com/modules/solid-gauge.js"></script>
 	<script type="text/javascript" src="js/5day.js"></script>
+	<script type="text/javascript" src="js/search.js"></script>
 	<script type="text/javascript">
 	var chart;
 	$(document).ready(function () {
@@ -29,353 +30,203 @@
 			// Fire the loading
 			head.appendChild(script);
 		}
-
-		loadJSON(function(data){
-
-			main_options.series= [{
-						
-						name: 'Temp',
-						type: 'spline',
-						yAxis: 0,
-						data: (function(){
-								var temp_in_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Temperature,w_desc:field.Weather_description,w_icon:field.Weather_icon,w_main:field.Weather_main,humidity:field.Humidity,pressure:field.Pressure};
-									temp_in_data.push(i);
-								});
-								console.log(temp_in_data);
-							return temp_in_data;
-						})(),
-						dataLabels:{
-								enabled:true,
-								useHTML:true,
-								formatter:function(){
-									 return '<span>'+this.point.w_icon+'</span><br/><br />';
-									//return '<img src="http://highcharts.com/demo/gfx/sun.png"><img>&nbsp;';
-								}
-							},
-						color: '#FF3D8B',
-						negativeColor: '#CCFFFF',
-						tooltip:{
-							enabled:true,
-						},
-						zIndex:100
-					},{
-						name:'Hum',
-						type: 'areaspline',
-						yAxis: 1,
-						data: (function(){
-								var hum_in_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Humidity};
-									hum_in_data.push(i);
-								});
-								console.log(hum_in_data);
-							return hum_in_data;
-						})(),
-						enableMouseTracking: false,
-						tooltip:{
-							enabled:false
-						},
-						dashStyle: 'shortdashdot',
-						color:'#D1F6FF',
-						marker:{
-							enabled: false,
-							symbol: 'circle',
-							radius: 1,
-							states:{
-								hover:{
-									enabled:true
-								}
-							}
-						}
-					},{
-						name: 'Rain-Fall',
-						type: 'column',
-						yAxis:2,
-						data: (function(){
-								var rain_in_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Rain};
-									rain_in_data.push(i);
-								});
-								console.log(rain_in_data);
-							return rain_in_data;
-						})(),
-						enableMouseTracking: false,
-						color:'blue',
-
-					},{
-						name: 'Snow-Fall',
-						type: 'column',
-						yAxis:2,
-						data: (function(){
-								var snow_in_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Rain};
-									snow_in_data.push(i);
-								});
-								console.log(snow_in_data);
-							return snow_in_data;
-						})(),
-						enableMouseTracking: false,
-						color:'grey',
-						plotOptions: {
-							series: {
-								pointWidth: 400
-							}
-						},
-						
-						
-					},
-					{
-						name: 'clouds',
-						type: 'arearange',
-						yAxis:3,
-						data: (function(){
-								var clouds_in_data = [];
-								$.each(data,function(i,field){							
-									var i =[];
-									console.log(field.Temperature);
-									i.push(field.time);
-									i.push(field.Humidity);
-									i.push(-field.Humidity);
-									//i={x:field.time,y:field.Humidity,y2:field.Rain};
-									clouds_in_data.push(i);
-								});
-								console.log("clouds:");
-								console.log(clouds_in_data);
-							return clouds_in_data;
-						})(),
-						enableMouseTracking: false,
-
-						fillColor : {
-						  linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-							  stops: [[0, 'rgba(255, 255, 255,0)'], [0.7, 'rgba(99, 99, 99,0.3)'],[1, 'rgba(0, 0, 0,1)']]
-						},
-						lineWidth:0,
-					}]
-//----------------------------------------DEFINITION CHART WIND--------------------------------							
-			options_windSpeed.series = [{
-						name: 'WindSpeed',
-						type: 'spline',
-						tickInterval: 24 * 3600 * 1000,
-						yAxis: 0,
-						data: (function(){
-								var sealevel_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Sea_level};
-									sealevel_data.push(i);
-								});
-								console.log(sealevel_data);
-								console.log("array:");
-							return sealevel_data;
-						})(),
-						enableMouseTracking: true
-					},{
-						name: 'WindSpeed Icon',
-						type: 'spline',
-						yAxis: 1,
-						tickInterval: 24 * 3600 * 1000,
-						data: (function(){
-								var sealevel_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:0};
-									sealevel_data.push(i);
-								});
-								console.log(sealevel_data);
-							return sealevel_data;
-						})(),
-						enableMouseTracking: false,
-						dataLabels:{
-								enabled:true,
-								useHTML:true,
-								y:245,
-								formatter:function(){
-									 return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate(45deg) scale(1);-ms-transform: rotate(45deg) scale(1); -webkit-transform:rotate(45deg) scale(1);" />';
-								}
-							}
-					}]
-			options_windSpeed.xAxis = [{
-										
-										},{
-										offset:-280,
-										tickInterval: 24 * 3600 * 1000,
-										
-										}]
-
-//----------------------------------------DEFINITION CHART PRESSURE--------------------------------			
-			options_pressure.series= [{
-						name: 'Pressure',
-						type: 'spline',
-						yAxis: 0,
-						data: (function(){
-								var pressure_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Pressure};
-									pressure_data.push(i);
-								});
-								console.log(pressure_data);
-							return pressure_data;
-						})(),
-						color: '#6C3738',
-						tooltip:{
-							valueSuffix: 'Pa',
-						},
-						dashStyle: 'longdash'
-					},
-					{
-						name: 'Altitude',
-						type: 'spline',
-						yAxis: 1,
-						data: (function(){
-								var sealevel_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Sea_level};
-									sealevel_data.push(i);
-								});
-								console.log(sealevel_data);
-							return sealevel_data;
-						})(),
-						enableMouseTracking: true,
-						color: '#EA8D11',
-						tooltip:{
-							valueSuffix: 'Pa',
-						}
-					}]
-					
+		//----------------------------load data from JSON---------------------
+		//Global variable:
+		var Temperature=[],
+			Humidity=[],
+			Sea_level=[],
+			Grnd_level=[],
+			Clouds=[],
+			Rain=[],
+			Snow=[],
+			Weather_description=[],
+			Weather_icon=[],
+			Icon_id=[],
+			Weather_main=[],
+			Pressure=[],
+			Wind_speed=[],
+			Wind_deg=[];
 			
+		function fillVariables(data){
+			$.each(data,function(i,field){
+					var Clouds_array=[];
+					Temperature.push({x:field.time,y:field.Temperature});
+					Humidity.push({x:field.time,y:field.Humidity});
+					Sea_level.push({x:field.time,y:field.Sea_level});
+					Grnd_level.push({x:field.time,y:field.Grnd_level});
+					Clouds_array.push(field.time);
+					Clouds_array.push(field.Clouds);
+					Clouds_array.push(-field.Clouds);
+					Clouds.push(Clouds_array);
+					Rain.push({x:field.time,y:field.Rain});
+					Snow.push({x:field.time,y:field.Snow});
+					Weather_description.push({x:field.time,y:field.Weather_description});
+					Weather_icon.push({x:field.time,y:field.Weather_icon});
+					Icon_id.push({x:field.time,y:field.Icon_id});
+					Weather_main.push({x:field.time,y:field.Weather_main});
+					Pressure.push({x:field.time,y:field.Pressure});
+					Wind_speed.push({x:field.time,y:field.Wind_speed});
+					Wind_deg.push({x:field.time,y:0,wind_deg:field.Wind_deg});
+				})
+		}
+		
+		loadJSON(function(data){
+			fillVariables(data);
+			createCharts();
+		});
+		
+		//---------------------------END load data---------------------------
+//------------------------------------DEFINITION MAIN TEMERATURE-------------------------------
+			main_options.series[0].data=Temperature;
+			main_options.series[1].data=Humidity;
+			main_options.series[2].data=Rain;
+			main_options.series[3].data=Snow;
+			main_options.series[4].data=Clouds;
+			
+//----------------------------------------DEFINITION CHART WIND--------------------------------		
+			options_windSpeed.series[0].data=Wind_speed;
+			options_windSpeed.series[1].data=Wind_deg;
+			options_windSpeed.series[1].dataLabels.formatter=function(){
+				var wind_deg=this.point.wind_deg;									
+				return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
+			};
+//----------------------------------------DEFINITION CHART PRESSURE--------------------------------			
+			options_pressure.series[0].data=Pressure;
+			options_pressure.series[1].data=Grnd_level;
 //----------------------------------------DEFINITION CHART SEA LEVEL--------------------------------							
-			options_sealevel.series = [{
-						name: 'Sea_level',
-						type: 'spline',
-						yAxis: 0,
-						data: (function(){
-								var sealevel_data = [];
-								$.each(data,function(i,field){							
-									var i ={};
-									i={x:field.time,y:field.Sea_level};
-									sealevel_data.push(i);
-								});
-								console.log(sealevel_data);
-							return sealevel_data;
-						})(),
-						enableMouseTracking: true,
-						color: '#EA8D11',
-						tooltip:{
-							valueSuffix: 'Pa',
-						}
-					}]	
-
+			options_sealevel.series[0].data=Sea_level;
 //---------------------------------------GAUGE OPTIONS--------------------------------------------------
-	gaugeOptions_tempIn.series= [{
-				name: 'Temp in',
-				data: 
-						(function(){		
-								var temp_in_data = [data[data.length-1].Temp_in];
-							return temp_in_data;
-						})(),
-				dataLabels: {
-					useHTML: true,
-					format: '<img src="img/Hum.png" width="50px" align="center"><div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009933">{y}</span></div>'
-				}
-			}]
 
-	gaugeOptions_tempOut.series= [{
+	gaugeOptions_Temperature.series=[{
+						name: 'Temp in',
+						data:[0],
+						dataLabels: {
+							useHTML: true,
+							format: '<img src="img/Hum.png" width="50px" align="center"><div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009933">{y}</span></div>'
+						}
+					}]
+	gaugeOptions_Sea_level.series= [{
 						name: 'Temp out',
-						data: 
-								(function(){		
-										var temp_out_data = [data[data.length-1].Temp_out];
-									return temp_out_data;
-								})(),
+						data: [0],
 						dataLabels: {
 							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:purple">{y}</span></div>'
 						}
-					}]
-					
+					}]		
 	gaugeOptions_humidity.series= [{
 						name: 'Humidity',
-						data: 
-								(function(){		
-										var humidity_data = [data[data.length-1].Humidity];
-									return humidity_data;
-								})(),
+						data: [0],
 						dataLabels: {
 						
 							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009ce8">{y}</span></div>'
 						}
 					}]
-					
 	gaugeOptions_pressure.series= [{
 						name: 'Pressure',
-						data: 
-								(function(){		
-										var pressure_data = [data[data.length-1].Pressure];
-									return pressure_data;
-								})(),
+						data: [0],
 						dataLabels: {
 							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:orange">{y}</span></div>'
 						}
 					}]
-
-//--------------------------------------CREATE GAUGE----------------------------------------------------
-				
-				gaugeOptions_humidity = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_humidity);
-				var gauge3 = new Highcharts.Chart(gaugeOptions_humidity);
-				gaugeOptions_pressure = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_pressure);
-				var gauge4 = new Highcharts.Chart(gaugeOptions_pressure);		
-				
-//-------------------------------round corner in gauge-----------------------------------------							
-$(document).ready(function () {
-				var svg;
-					svg = document.getElementsByTagName('svg');
-					if (svg.length > 0) {
-						$.each(svg,function(i,field){
-							var path = field.getElementsByTagName('path')
-								if (path.length > 1) {
-									console.log(path);
-									// First path is gauge background
-									path[0].setAttributeNS(null, 'stroke-linejoin', 'round');
-									// Second path is gauge value
-									path[1].setAttributeNS(null, 'stroke-linejoin', 'round');
-									path[2].setAttributeNS(null, 'stroke-linejoin', 'round');
-							}
-						})
-						
-					}
-		});
-//-------------------------------end round corner----------------------------------------
-//----------------------------------CREATE CHARTS---------------------------------------------
-					
-					chart = new Highcharts.Chart(main_options);
-					chart_options_sealevel = new Highcharts.Chart(options_windSpeed);
-					chart_2graph_pressure = new Highcharts.Chart(options_pressure);
-					chart_options_sealevel = new Highcharts.Chart(options_sealevel);
+//---------------------------------------------------update-------------------------------------------------------			
+			$(".change").click(function(){
+				update_charts();
 			});
-
+					
+			
+	function update_charts(){
+			var chart = $('#2gauge').highcharts(),
+						point,
+						newVal,
+						
+						
+			point = chart.series[0].points[0];
+			newVal = 3;
+			
+			point.update(newVal);
+			console.log("New dataset:");
+			console.log(newVal);
+	}
+	
+	function getForecastData(city_id,city_name){
+				if(isMenuChoice5Day()){
+					var url = "php/getDBdata_5Day.php";
+				}
+				else{
+					var url = "php/getDBdata_16Day.php";
+				}
+					$.ajax({
+						type: 	"GET",
+						url:	url,
+						dataType: "json",
+						data:	{city_id:city_id},
+						success:function(response){
+						
+							
+							
+								
+									$.each(response,function(i,value){
+										fillVariables(value);
+										console.log(Temperature);
+										var container = $('#container').highcharts();
+										container.series[0].setData(Temperature);
+										container.series[1].setData(Humidity);
+										container.series[2].setData(Rain);
+										container.series[3].setData(Snow);
+										container.series[4].setData(Clouds);
+									
+									});
+							
+							
+						},
+						error: function(jqXHR, exception) {
+							console.log(jqXHR);
+							if (jqXHR.status === 0) {
+								alert('Not connect.\n Verify Network.');
+							} else if (jqXHR.status == 404) {
+								alert('Requested page not found. [404]');
+							} else if (jqXHR.status == 500) {
+								alert('Internal Server Error [500].');
+							} else if (exception === 'parsererror') {
+								alert('Requested JSON parse failed.');
+							} else if (exception === 'timeout') {
+								alert('Time out error.');
+							} else if (exception === 'abort') {
+								alert('Ajax request aborted.');
+							} else {
+								alert('Uncaught Error.\n' + jqXHR.responseText);
+							}
+						  
+						},
+						stop:function(){
+							alert("Ajax exit with status: --Stop");
+						}
+					});
+					return false;
+			}
+			
 	});
-	
-	
-	
 	</script>
 
 </head>
 <body>
 Start
+	<button class="change">set neew data</button>
+	
+	<div class="base_class">
+		<form autocomplete="on" id="search">
+			<input class="search" type="search" size="30"  onkeyup="handle_key(event);" data-search="" autofocus placeholder="Search..." >
+			<div id="livesearch"></div>
+			<div class="result"></div>
+		</form>
+	</div>
+	
 	<div id='container'>h</div>
 	<div id='graph_windSpeed'>h</div>
 	<div id='2graph_pressure'>h</div>
 	<div id='3graph_sealevel'>h</div>
 	
-
+	<div id='1gauge'></div>
+	<div id='2gauge'></div>
 	<div id='3gauge'></div>
 	<div id='4gauge'></div>
 </body>

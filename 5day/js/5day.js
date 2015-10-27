@@ -59,7 +59,7 @@ Highcharts.setOptions({
 });
 		
 //------------------------------DEFINITION MAIN CHART-----------------------------------------------------
-	 main_options = {
+	var main_options = {
 			chart: {
 				spacingTop: 90,
 				renderTo: 'container',
@@ -217,6 +217,78 @@ Highcharts.setOptions({
 					borderWidth: 0
 				},
 			},
+			series:[{
+				name: 'Temp',
+				type: 'spline',
+				yAxis: 0,
+				dataLabels:{
+					enabled:true,
+					useHTML:true,
+					formatter:function(){
+						 return '<span>'+this.point.w_icon+'</span><br/><br />';
+						//return '<img src="http://highcharts.com/demo/gfx/sun.png"><img>&nbsp;';
+					}
+				},
+				color: '#FF3D8B',
+				negativeColor: '#CCFFFF',
+				tooltip:{
+					enabled:true,
+				},
+				zIndex:100,
+				data:[],
+			},{
+				name:'Hum',
+				type: 'areaspline',
+				yAxis: 1,
+				data: [],
+				enableMouseTracking: false,
+				tooltip:{
+					enabled:false
+				},
+				dashStyle: 'shortdashdot',
+				color:'#D1F6FF',
+				marker:{
+					enabled: false,
+					symbol: 'circle',
+					radius: 1,
+					states:{
+						hover:{
+							enabled:true
+						}
+					}
+				}
+			},{
+				name: 'Rain-Fall',
+				type: 'column',
+				yAxis:2,
+				data: [],
+				enableMouseTracking: false,
+				color:'blue',
+			},{
+				name: 'Snow-Fall',
+				type: 'column',
+				yAxis:2,
+				data: [],
+				enableMouseTracking: false,
+				color:'grey',
+				plotOptions: {
+					series: {
+						pointWidth: 400
+					}
+				},
+			},{
+				name: 'clouds',
+				type: 'arearange',
+				yAxis:3,
+				data: [],
+				enableMouseTracking: false,
+
+				fillColor : {
+				  linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					  stops: [[0, 'rgba(255, 255, 255,0)'], [0.7, 'rgba(99, 99, 99,0.3)'],[1, 'rgba(0, 0, 0,1)']]
+				},
+				lineWidth:0,
+			}]
 		}
 //--------------------------------------WIND----------------------------		
 var options_windSpeed = {
@@ -229,6 +301,12 @@ var options_windSpeed = {
 		title: {
 			text: 'Wind Speed'
 		},
+		xAxis:[{
+			
+		},{
+			offset:-280,
+			tickInterval: 24 * 3600 * 1000,	
+		}],
 		yAxis: [{
 			minorGridLineWidth: 0,
             gridLineWidth: 0,
@@ -276,7 +354,7 @@ var options_windSpeed = {
             }, { // Moderate breeze
                 from: 5.5,
                 to: 8,
-                color: '#99FF99',
+                color: '#AAFFAA',
                 label: {
                     text: 'Moderate breeze',
                     style: {
@@ -286,7 +364,7 @@ var options_windSpeed = {
             }, { // Fresh breeze
                 from: 8,
                 to: 10.8,
-                color: '#AAFFAA',
+                color:'#99FF99',
                 label: {
                     text: 'Fresh breeze',
                     style: {
@@ -406,7 +484,29 @@ var options_windSpeed = {
                     enabled: false
                 }
             }
-        }
+        },
+		series:[{
+			name: 'WindSpeed',
+			type: 'spline',
+			tickInterval: 24 * 3600 * 1000,
+			yAxis: 0,
+			data: [],
+			enableMouseTracking: true
+		},{
+			name: 'WindSpeed Icon',
+			type: 'line',
+			yAxis: 1,
+			tickInterval: 24 * 3600 * 1000,
+			data: [],
+			enableMouseTracking: false,
+			visible:true,
+			dataLabels:{
+					enabled:true,
+					useHTML:true,
+					y:245,
+				},
+			
+		}]
 }	
 //-------------------------------------PRESURE---------------------------------		
 var options_pressure = {
@@ -450,6 +550,27 @@ var options_pressure = {
 				}
 			},
 			opposite: true,
+		}],
+		series:[{
+			name: 'Pressure',
+			type: 'spline',
+			yAxis: 0,
+			data: [],
+			color: '#6C3738',
+			tooltip:{
+				valueSuffix: 'Pa',
+			},
+			dashStyle: 'longdash'
+		},{
+			name: 'Ground level',
+			type: 'spline',
+			yAxis: 1,
+			data: [],
+			enableMouseTracking: true,
+			color: '#EA8D11',
+			tooltip:{
+				valueSuffix: 'Pa',
+			}
 		}]
 	
 }
@@ -479,9 +600,19 @@ var options_sealevel = {
 				}
 			},
 			opposite: false,
-		}
+		},
+		series:[{
+			name: 'Sea_level',
+			type: 'spline',
+			yAxis: 0,
+			data: [],
+			enableMouseTracking: true,
+			color: '#EA8D11',
+			tooltip:{
+				valueSuffix: 'Pa',
+			}
+		}]
 }
-
 //----------------------------END of graph def-----------------------------------		
 //----------------------------Gauge default options--------------------------------------
 var defaultGaugeOptions = {
@@ -534,17 +665,17 @@ var defaultGaugeOptions = {
 		}
 }		
 //---------------------------gauge1 options----------------------------------------
-					var gaugeOptions_tempIn = {
+					var gaugeOptions_Temperature = {
 							chart: {
 								renderTo: '1gauge'
 							},
 							yAxis: {
 								min: 0,
-								max: 200,
+								max: 2000,
 								minColor: '#99D6AD',
 								maxColor: '#005C1F',
 								title: {
-									text: 'T (home)'
+									text: 'Temperature'
 								}
 							},
 							plotOptions:{
@@ -559,17 +690,17 @@ var defaultGaugeOptions = {
 								enabled: false
 							}
 					}
-					var gaugeOptions_tempOut = {
+					var gaugeOptions_Sea_level = {
 							chart: {
 								renderTo: '2gauge'
 							},
 							yAxis: {
 								min: 0,
-								max: 200,
+								max: 20000,
 								minColor: '#99D6AD',
 								maxColor: '#005C1F',
 								title: {
-									text: 'T (out)'
+									text: 'Sea level'
 								}
 							},
 							plotOptions:{
@@ -590,7 +721,7 @@ var defaultGaugeOptions = {
 							},
 							yAxis: {
 								min: 0,
-								max: 200,
+								max: 100,
 								title: {
 									text: 'Humidity'
 								}
@@ -608,7 +739,7 @@ var defaultGaugeOptions = {
 							},
 							yAxis: {
 								min: 0,
-								max: 5000,
+								max: 50000,
 								title: {
 									text: 'Pressure'
 								}
@@ -627,10 +758,51 @@ var defaultGaugeOptions = {
 							
 					}
 //--------------------------end of gauge options------------------------------------
-	
+function createCharts(){
+		//--------------------------------------CREATE GAUGE----------------------------------------------------
+						
+						gaugeOptions_Temperature = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Temperature);
+						var gauge1 = new Highcharts.Chart(gaugeOptions_Temperature);
+						gaugeOptions_Sea_level = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Sea_level);
+						var gauge2 = new Highcharts.Chart(gaugeOptions_Sea_level);
+						gaugeOptions_humidity = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_humidity);
+						var gauge3 = new Highcharts.Chart(gaugeOptions_humidity);
+						gaugeOptions_pressure = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_pressure);
+						var gauge4 = new Highcharts.Chart(gaugeOptions_pressure);		
+						console.log("gauge temp:");
+						console.log(gauge1);
+		//----------------------------------CREATE CHARTS---------------------------------------------
 
-	
+						chart = new Highcharts.Chart(main_options);
+						chart_options_sealevel = new Highcharts.Chart(options_windSpeed);
+						chart_2graph_pressure = new Highcharts.Chart(options_pressure);
+						chart_options_sealevel = new Highcharts.Chart(options_sealevel);
+					
+	round_corner();	
+
+}		
+
+function round_corner(){
+//-------------------------------round corner in gauge-----------------------------------------							
+
+	var svg;
+		svg = document.getElementsByTagName('svg');
+		if (svg.length > 0) {
+			$.each(svg,function(i,field){
+				var path = field.getElementsByTagName('path')
+					if (path.length > 1) {
+						console.log(path);
+						// First path is gauge background
+						path[0].setAttributeNS(null, 'stroke-linejoin', 'round');
+						// Second path is gauge value
+						path[1].setAttributeNS(null, 'stroke-linejoin', 'round');
+						//path[2].setAttributeNS(null, 'stroke-linejoin', 'round');
+						path[2].setAttributeNS(null, 'stroke-linejoin', 'round');
+				}
+			})
 			
+		}
 				
-		
-		
+//-------------------------------end round corner----------------------------------------
+	
+}
