@@ -12,26 +12,8 @@
 	<script type="text/javascript" src="js/5day.js"></script>
 	<script type="text/javascript" src="js/search.js"></script>
 	<script type="text/javascript">
-	var chart;
-	$(document).ready(function () {
-		function loadScript(url, callback)
-		{
-			// Adding the script tag to the head as suggested before
-			var head = document.getElementsByTagName('head')[0];
-			var script = document.createElement('script');
-			script.type = 'text/javascript';
-			script.src = url;
-
-			// Then bind the event to the callback function.
-			// There are several events for cross browser compatibility.
-			script.onreadystatechange = callback;
-			script.onload = callback;
-
-			// Fire the loading
-			head.appendChild(script);
-		}
-		//----------------------------load data from JSON---------------------
-		//Global variable:
+	
+	//Global variable:
 		var Temperature=[],
 			Humidity=[],
 			Sea_level=[],
@@ -46,11 +28,27 @@
 			Pressure=[],
 			Wind_speed=[],
 			Wind_deg=[];
-			
-		function fillVariables(data){
+	function variablesInit(){
+			Temperature=[],
+			Humidity=[],
+			Sea_level=[],
+			Grnd_level=[],
+			Clouds=[],
+			Rain=[],
+			Snow=[],
+			Weather_description=[],
+			Weather_icon=[],
+			Icon_id=[],
+			Weather_main=[],
+			Pressure=[],
+			Wind_speed=[],
+			Wind_deg=[];
+	}
+	function fillVariables(data){
 			$.each(data,function(i,field){
 					var Clouds_array=[];
 					Temperature.push({x:field.time,y:field.Temperature});
+					console.log(Temperature);
 					Humidity.push({x:field.time,y:field.Humidity});
 					Sea_level.push({x:field.time,y:field.Sea_level});
 					Grnd_level.push({x:field.time,y:field.Grnd_level});
@@ -68,9 +66,51 @@
 					Wind_speed.push({x:field.time,y:field.Wind_speed});
 					Wind_deg.push({x:field.time,y:0,wind_deg:field.Wind_deg});
 				})
-		}
+	}
+	function loadScript(url, callback){
+			// Adding the script tag to the head as suggested before
+			var head = document.getElementsByTagName('head')[0];
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
+
+			// Then bind the event to the callback function.
+			// There are several events for cross browser compatibility.
+			script.onreadystatechange = callback;
+			script.onload = callback;
+
+			// Fire the loading
+			head.appendChild(script);
+	}
+	//---------------------------------------------------update-------------------------------------------------------			
+$(".change").click(function(){
+		update_charts();
+});	
+	
+function update_charts(){
 		
-		loadJSON(function(data){
+		var container = $('#container').highcharts();
+		console.log("container chart:");
+		console.log(container);
+		var chart = $('#2gauge').highcharts(),
+					point,
+					newVal;
+					
+			console.log(chart);		
+		/*			
+		point = chart.series[0].points[0];
+		newVal = 3;
+		
+		point.update(newVal);
+		console.log("New dataset:");
+		console.log(newVal);*/
+}
+	
+	$(document).ready(function () {
+		
+		//----------------------------load data from JSON---------------------
+		console.log("start");
+		loadJSON5Day(function(data){
 			fillVariables(data);
 			createCharts();
 		});
@@ -127,83 +167,7 @@
 							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:orange">{y}</span></div>'
 						}
 					}]
-//---------------------------------------------------update-------------------------------------------------------			
-			$(".change").click(function(){
-				update_charts();
-			});
-					
-			
-	function update_charts(){
-			var chart = $('#2gauge').highcharts(),
-						point,
-						newVal,
-						
-						
-			point = chart.series[0].points[0];
-			newVal = 3;
-			
-			point.update(newVal);
-			console.log("New dataset:");
-			console.log(newVal);
-	}
-	
-	function getForecastData(city_id,city_name){
-				if(isMenuChoice5Day()){
-					var url = "php/getDBdata_5Day.php";
-				}
-				else{
-					var url = "php/getDBdata_16Day.php";
-				}
-					$.ajax({
-						type: 	"GET",
-						url:	url,
-						dataType: "json",
-						data:	{city_id:city_id},
-						success:function(response){
-						
-							
-							
-								
-									$.each(response,function(i,value){
-										fillVariables(value);
-										console.log(Temperature);
-										var container = $('#container').highcharts();
-										container.series[0].setData(Temperature);
-										container.series[1].setData(Humidity);
-										container.series[2].setData(Rain);
-										container.series[3].setData(Snow);
-										container.series[4].setData(Clouds);
-									
-									});
-							
-							
-						},
-						error: function(jqXHR, exception) {
-							console.log(jqXHR);
-							if (jqXHR.status === 0) {
-								alert('Not connect.\n Verify Network.');
-							} else if (jqXHR.status == 404) {
-								alert('Requested page not found. [404]');
-							} else if (jqXHR.status == 500) {
-								alert('Internal Server Error [500].');
-							} else if (exception === 'parsererror') {
-								alert('Requested JSON parse failed.');
-							} else if (exception === 'timeout') {
-								alert('Time out error.');
-							} else if (exception === 'abort') {
-								alert('Ajax request aborted.');
-							} else {
-								alert('Uncaught Error.\n' + jqXHR.responseText);
-							}
-						  
-						},
-						stop:function(){
-							alert("Ajax exit with status: --Stop");
-						}
-					});
-					return false;
-			}
-			
+
 	});
 	</script>
 

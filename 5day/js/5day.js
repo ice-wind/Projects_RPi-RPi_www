@@ -1,14 +1,15 @@
 var main_options;
 var options_pressure;
 
-	function loadJSON(callback){
-			$.getJSON("php/getDBdata_5Day.php",function(result){	
-					callback(result);
-
+	function loadJSON5Day(callback){
+		
+			$.getJSON("php/getDBdata_5Day.php?city_id=3056508",function(result){
+				console.log(result);
+				callback(result);
 			});
 		}
-	// global options
-
+		
+//----------------------------------- global CHART options--------------------------------------------
 Highcharts.setOptions({
 	global: {
 		timezoneOffset: 6 * 60
@@ -20,7 +21,6 @@ Highcharts.setOptions({
 			crosshair:false,
 			gridLineWidth:1
 	},
-			
 	tooltip:{
 			useHTML: true,
 			formatter: function(){
@@ -43,7 +43,6 @@ Highcharts.setOptions({
 					Highcharts.numberFormat(this.y, 2);
 			}					
 	},
-			
 	plotOptions:{
 			areaspline:{
 					fillOpacity:0.1
@@ -56,8 +55,7 @@ Highcharts.setOptions({
 					}
 				}
 	}
-});
-		
+});	
 //------------------------------DEFINITION MAIN CHART-----------------------------------------------------
 	var main_options = {
 			chart: {
@@ -140,7 +138,6 @@ Highcharts.setOptions({
 						color:  'gray'
 					},
 					formatter: function() {
-						console.log(this.total);
 						if (this.total != 0) {
 						  return this.total;
 						} else {
@@ -779,19 +776,15 @@ function createCharts(){
 						chart_options_sealevel = new Highcharts.Chart(options_sealevel);
 					
 	round_corner();	
-
 }		
-
+//-------------------------------round corner in gauge-----------------------------------------		
 function round_corner(){
-//-------------------------------round corner in gauge-----------------------------------------							
-
 	var svg;
 		svg = document.getElementsByTagName('svg');
 		if (svg.length > 0) {
 			$.each(svg,function(i,field){
 				var path = field.getElementsByTagName('path')
 					if (path.length > 1) {
-						console.log(path);
 						// First path is gauge background
 						path[0].setAttributeNS(null, 'stroke-linejoin', 'round');
 						// Second path is gauge value
@@ -800,9 +793,7 @@ function round_corner(){
 						path[2].setAttributeNS(null, 'stroke-linejoin', 'round');
 				}
 			})
-			
-		}
-				
-//-------------------------------end round corner----------------------------------------
-	
+		}	
 }
+//-------------------------------end round corner----------------------------------------
+
