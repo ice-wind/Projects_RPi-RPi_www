@@ -1,14 +1,3 @@
-var main_options;
-var options_pressure;
-
-	function loadJSON5Day(callback){
-		
-			$.getJSON("php/getDBdata_5Day.php?city_id=3056508",function(result){
-				console.log(result);
-				callback(result);
-			});
-		}
-		
 //----------------------------------- global CHART options--------------------------------------------
 Highcharts.setOptions({
 	global: {
@@ -308,6 +297,13 @@ var options_windSpeed = {
 			minorGridLineWidth: 0,
             gridLineWidth: 0,
             alternateGridColor: null,
+			title: {
+				text: 'Wind Speed',
+			},
+			labels:{
+				format: '{value} m/s',
+			},
+			opposite: false,
 			plotBands: [ { // Calm
                 from: 0,
                 to: 0.3,
@@ -440,35 +436,18 @@ var options_windSpeed = {
                 }
 			}]
 		},{
-			gridLineWidth:1,
+			minorGridLineWidth: 0,
+            gridLineWidth: 0,
+            alternateGridColor: null,
 			minorTickInterval: 'auto',
 			title: {
-				text: 'WindSpeed Icon',
-				style: {
-					color: '#5C83A3'
-					}
+				enabled:false,
 			},
 			labels:{
-				format: '{value} m/s',
-				style:{
-					color:'#5C83A3'
-				}
+				enabled:false,
 			}
 		}],
-			title: {
-				text: 'Wind Speed',
-				style: {
-					color: '#EA8D11'
-					}
-			},
-			labels:{
-				format: '{value} m/s',
-				style:{
-					color:'grey'
-				}
-			},
-			opposite: false,
-		
+
 		plotOptions: {
             spline: {
                 lineWidth: 4,
@@ -488,7 +467,12 @@ var options_windSpeed = {
 			tickInterval: 24 * 3600 * 1000,
 			yAxis: 0,
 			data: [],
-			enableMouseTracking: true
+			enableMouseTracking: true,
+			marker: {
+                    fillColor: '#FFFFFF',
+                    lineWidth: 2,
+                    lineColor: null // inherit from series
+            }
 		},{
 			name: 'WindSpeed Icon',
 			type: 'line',
@@ -502,7 +486,10 @@ var options_windSpeed = {
 					useHTML:true,
 					y:245,
 				},
-			
+			marker: {
+                    enabled: false
+            },
+			color:'#D7D7D7',
 		}]
 }	
 //-------------------------------------PRESURE---------------------------------		
@@ -777,23 +764,6 @@ function createCharts(){
 					
 	round_corner();	
 }		
-//-------------------------------round corner in gauge-----------------------------------------		
-function round_corner(){
-	var svg;
-		svg = document.getElementsByTagName('svg');
-		if (svg.length > 0) {
-			$.each(svg,function(i,field){
-				var path = field.getElementsByTagName('path')
-					if (path.length > 1) {
-						// First path is gauge background
-						path[0].setAttributeNS(null, 'stroke-linejoin', 'round');
-						// Second path is gauge value
-						path[1].setAttributeNS(null, 'stroke-linejoin', 'round');
-						//path[2].setAttributeNS(null, 'stroke-linejoin', 'round');
-						path[2].setAttributeNS(null, 'stroke-linejoin', 'round');
-				}
-			})
-		}	
-}
-//-------------------------------end round corner----------------------------------------
+
+
 

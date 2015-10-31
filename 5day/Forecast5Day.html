@@ -9,132 +9,42 @@
 	<script src="http://code.highcharts.com/highcharts-more.js"></script>
 	<script src="http://code.highcharts.com/modules/exporting.js"></script>
 	<script src="http://code.highcharts.com/modules/solid-gauge.js"></script>
+	<script type="text/javascript" src="js/init.js"></script>
 	<script type="text/javascript" src="js/5day.js"></script>
 	<script type="text/javascript" src="js/search.js"></script>
 	<script type="text/javascript">
 	
-	//Global variable:
-		var Temperature=[],
-			Humidity=[],
-			Sea_level=[],
-			Grnd_level=[],
-			Clouds=[],
-			Rain=[],
-			Snow=[],
-			Weather_description=[],
-			Weather_icon=[],
-			Icon_id=[],
-			Weather_main=[],
-			Pressure=[],
-			Wind_speed=[],
-			Wind_deg=[];
-	function variablesInit(){
-			Temperature=[],
-			Humidity=[],
-			Sea_level=[],
-			Grnd_level=[],
-			Clouds=[],
-			Rain=[],
-			Snow=[],
-			Weather_description=[],
-			Weather_icon=[],
-			Icon_id=[],
-			Weather_main=[],
-			Pressure=[],
-			Wind_speed=[],
-			Wind_deg=[];
-	}
-	function fillVariables(data){
-			$.each(data,function(i,field){
-					var Clouds_array=[];
-					Temperature.push({x:field.time,y:field.Temperature});
-					console.log(Temperature);
-					Humidity.push({x:field.time,y:field.Humidity});
-					Sea_level.push({x:field.time,y:field.Sea_level});
-					Grnd_level.push({x:field.time,y:field.Grnd_level});
-					Clouds_array.push(field.time);
-					Clouds_array.push(field.Clouds);
-					Clouds_array.push(-field.Clouds);
-					Clouds.push(Clouds_array);
-					Rain.push({x:field.time,y:field.Rain});
-					Snow.push({x:field.time,y:field.Snow});
-					Weather_description.push({x:field.time,y:field.Weather_description});
-					Weather_icon.push({x:field.time,y:field.Weather_icon});
-					Icon_id.push({x:field.time,y:field.Icon_id});
-					Weather_main.push({x:field.time,y:field.Weather_main});
-					Pressure.push({x:field.time,y:field.Pressure});
-					Wind_speed.push({x:field.time,y:field.Wind_speed});
-					Wind_deg.push({x:field.time,y:0,wind_deg:field.Wind_deg});
-				})
-	}
-	function loadScript(url, callback){
-			// Adding the script tag to the head as suggested before
-			var head = document.getElementsByTagName('head')[0];
-			var script = document.createElement('script');
-			script.type = 'text/javascript';
-			script.src = url;
-
-			// Then bind the event to the callback function.
-			// There are several events for cross browser compatibility.
-			script.onreadystatechange = callback;
-			script.onload = callback;
-
-			// Fire the loading
-			head.appendChild(script);
-	}
-	//---------------------------------------------------update-------------------------------------------------------			
-$(".change").click(function(){
-		update_charts();
-});	
-	
-function update_charts(){
-		
-		var container = $('#container').highcharts();
-		console.log("container chart:");
-		console.log(container);
-		var chart = $('#2gauge').highcharts(),
-					point,
-					newVal;
-					
-			console.log(chart);		
-		/*			
-		point = chart.series[0].points[0];
-		newVal = 3;
-		
-		point.update(newVal);
-		console.log("New dataset:");
-		console.log(newVal);*/
-}
 	
 	$(document).ready(function () {
 		
 		//----------------------------load data from JSON---------------------
-		console.log("start");
+		console.log("start main:");
+		
 		loadJSON5Day(function(data){
-			fillVariables(data);
+			data5Day = fillVariables(data,data5Day);
 			createCharts();
 		});
 		
 		//---------------------------END load data---------------------------
 //------------------------------------DEFINITION MAIN TEMERATURE-------------------------------
-			main_options.series[0].data=Temperature;
-			main_options.series[1].data=Humidity;
-			main_options.series[2].data=Rain;
-			main_options.series[3].data=Snow;
-			main_options.series[4].data=Clouds;
+			main_options.series[0].data=data5Day.Temperature;
+			main_options.series[1].data=data5Day.Humidity;
+			main_options.series[2].data=data5Day.Rain;
+			main_options.series[3].data=data5Day.Snow;
+			main_options.series[4].data=data5Day.Clouds;
 			
 //----------------------------------------DEFINITION CHART WIND--------------------------------		
-			options_windSpeed.series[0].data=Wind_speed;
-			options_windSpeed.series[1].data=Wind_deg;
+			options_windSpeed.series[0].data=data5Day.Wind_speed;
+			options_windSpeed.series[1].data=data5Day.Wind_deg;
 			options_windSpeed.series[1].dataLabels.formatter=function(){
 				var wind_deg=this.point.wind_deg;									
 				return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
 			};
 //----------------------------------------DEFINITION CHART PRESSURE--------------------------------			
-			options_pressure.series[0].data=Pressure;
-			options_pressure.series[1].data=Grnd_level;
+			options_pressure.series[0].data=data5Day.Pressure;
+			options_pressure.series[1].data=data5Day.Grnd_level;
 //----------------------------------------DEFINITION CHART SEA LEVEL--------------------------------							
-			options_sealevel.series[0].data=Sea_level;
+			options_sealevel.series[0].data=data5Day.Sea_level;
 //---------------------------------------GAUGE OPTIONS--------------------------------------------------
 
 	gaugeOptions_Temperature.series=[{
@@ -167,17 +77,33 @@ function update_charts(){
 							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:orange">{y}</span></div>'
 						}
 					}]
-
 	});
 	</script>
 
 </head>
 <body>
 Start
+	<a href="#" class="scrollToTop"></a>
 	<button class="change">set neew data</button>
-	
+	<ul id="accordion">
+		<li>
+			<label for="first">RPi</label>
+			<input type="radio" name="accordion" value="1" id="first" >
+			<div class="content">RPi</div>
+		</li>
+		<li>
+			<label for="second">5</label>
+			<input type="radio" name="accordion" value="2" id="second" checked>
+			<div class="content">5</div>
+		</li>
+		<li>
+			<label for="third">16</label>
+			<input type="radio" name="accordion" value="3" id="third">
+			<div class="content">16</div>
+		</li>
+	</ul>
 	<div class="base_class">
-		<form autocomplete="on" id="search">
+		<form autocomplete="on" id="search" >
 			<input class="search" type="search" size="30"  onkeyup="handle_key(event);" data-search="" autofocus placeholder="Search..." >
 			<div id="livesearch"></div>
 			<div class="result"></div>

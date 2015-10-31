@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
 	$('body').on('click','*',function(){
 		$("#livesearch").slideUp();
@@ -15,28 +16,23 @@ $(document).ready(function () {
 		//$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 	});
 	*/
-	
-	
-	
-	
 });
 		
 function handle_key(e){
-		if(e.which === 13){
-			//e.preventDefault();									//--------------------important!!!
-			var city_name = $(".search").val();
-			if($(".city")[0]){
-				var city_id = $(".city").val(city_name);
-				var city_id = $(city_id[0].outerHTML)[0].getAttribute("data-ID");
-				$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
-			}
-		}else 
-			if(e.which == 8){// <-
-				$(".search").val("");
-		}else{
-			showResult();
+	if(e.which === 13){
+		var city_name = $(".search").val();
+		if($(".city")[0]){
+			var city_id = $(".city").val(city_name);
+			var city_id = $(city_id[0].outerHTML)[0].getAttribute("data-ID");
+			$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 		}
+	}else 
+		if(e.which == 8){// <-
+			$(".search").val("");
+	}else{
+		showSearchSugestionResult();
 	}
+}
 
 function passCityData(object){
 	var city_id = object.getAttribute("data-ID");
@@ -44,8 +40,11 @@ function passCityData(object){
 	$(".search").val(city_name);
 	$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 }
-function isMenuChoice5Day(){  //------------------------------not complete!!!
-	return true;
+function isMenuChoice5Day(){
+	if(getMenuSelection()==='2'){
+		return true;
+	}else
+		return false;
 }
 			
 function getForecastData(city_id,city_name){
@@ -63,26 +62,28 @@ function getForecastData(city_id,city_name){
 			data:	{city_id:city_id},
 			success:function(response){
 			
-				variablesInit();							
-				fillVariables(response);
+		
+			
+			data5Day = fillVariables(response,data5Day);
+
 
 				var container = $('#container').highcharts();
-				container.series[0].setData(Temperature);
-				container.series[1].setData(Humidity);
-				container.series[2].setData(Rain);
-				container.series[3].setData(Snow);
-				container.series[4].setData(Clouds);
+				container.series[0].setData(data5Day.Temperature);
+				container.series[1].setData(data5Day.Humidity);
+				container.series[2].setData(data5Day.Rain);
+				container.series[3].setData(data5Day.Snow);
+				container.series[4].setData(data5Day.Clouds);
 				
 				var wind = $('#graph_windSpeed').highcharts();
-				wind.series[0].setData(Wind_speed);
-				wind.series[1].setData(Wind_deg);
+				wind.series[0].setData(data5Day.Wind_speed);
+				wind.series[1].setData(data5Day.Wind_deg);
 				
 				var pressure = $('#2graph_pressure').highcharts();
-				pressure.series[0].setData(Pressure);
-				pressure.series[1].setData(Grnd_level);
+				pressure.series[0].setData(data5Day.Pressure);
+				pressure.series[1].setData(data5Day.Grnd_level);
 				
 				var sea_level = $('#3graph_sealevel').highcharts();
-				sea_level.series[0].setData(Sea_level);
+				sea_level.series[0].setData(data5Day.Sea_level);
 					
 			},
 			error: function(jqXHR, exception) {
@@ -111,7 +112,7 @@ function getForecastData(city_id,city_name){
 		return false;
 }
 
-function showResult(){
+function showSearchSugestionResult(){
 	var cityList="";
 	var wrapper_cityList;
 	var firstCity="";
