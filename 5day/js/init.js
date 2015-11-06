@@ -1,18 +1,35 @@
 //Global variable:
-	function data(){
-			this.Temperature=[],
-			this.Humidity=[],
-			this.Clouds=[],
-			this.Rain=[],
-			this.Snow=[],
-			this.Weather_description=[],
-			this.Weather_icon=[],
-			this.Icon_id=[],
-			this.Weather_main=[],
-			this.Pressure=[],
-			this.Wind_speed=[],
-			this.Wind_deg=[];
+	function data(a){
+			var Temperature=[];
+			var Humidity=[];
+			var Clouds=[];
+			var Rain=[];
+			var Snow=[];
+			var Weather_description=[];
+			var Weather_icon=[];
+			var Icon_id=[];
+			var Weather_main=[];
+			var Pressure=[];
+			var Wind_speed=[];
+			var Wind_deg=[];
+			
+			//var that = this;
+			
+			this.getTemperaturPrivileged = function(){return Temperature};
+			this.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
+			this.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
+			this.setClouds = function(myClouds){Clouds.push(myClouds)};
+			this.setRain = function(myRain){Rain.push(myRain)};
+			this.setSnow = function(mySnow){Snow.push(mySnow)};
+			this.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
+			this.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
+			this.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
+			this.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
+			this.setPressure = function(myPressure){Pressure.push(myPressure)};
+			this.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
+			this.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
 	}
+	/*
 	data.prototype = {
 		constructor:data,
 		getTemperature:function(){
@@ -70,47 +87,54 @@
 			this.Wind_speed=Wind_speed,
 			this.Wind_deg=Wind_deg;
 		}
-	}
+	}*/
 	
+	
+	
+	 
+	//var data5Day = Object.create(data);
 	var data5Day = new data();
-	var data16Day = new data();
+	var data16Day = new data(89);
+	
+	data16Day.Temperature=78;
+	
+	console.log(data16Day.getTemperaturPrivileged());
+	console.log(data16Day.Temperature);
 	
 	data5Day.Sea_level=[];
 	data5Day.getSea_level=function(){
 		return this.Sea_level;
 	}
 	data5Day.setSea_level=function(Sea_level){
-		this.Sea_level=Sea_level;
+		var Sea_level=Sea_level;
 	}
 	data5Day.Grnd_level=[];
-	data5Day.getGrnd_level=function(){
-		return this.Grnd_level;
-	}
-	data5Day.setGrnd_level=function(Grnd_level){
-		this.Grnd_level=Grnd_level;
+	
+	data5Day.setGrnd_level=function(myGrnd_level){
+		 Grnd_level.push(myGrnd_level);
 	}
 
 
-	function fillVariables(data,var5day){
+	function fillVariables(data){
 			$.each(data,function(i,field){
 					var Clouds_array=[];
-					var5day.Temperature.push({x:field.time,y:field.Temperature});
-					var5day.Humidity.push({x:field.time,y:field.Humidity});
-					var5day.Sea_level.push({x:field.time,y:field.Sea_level});
-					var5day.Grnd_level.push({x:field.time,y:field.Grnd_level});
+					data5Day.setTemperature({x:field.time,y:field.Temperature});
+					data5Day.setHumidity({x:field.time,y:field.Humidity});
+					data5Day.setSea_level({x:field.time,y:field.Sea_level});
+					data5Day.setGrnd_level.push({x:field.time,y:field.Grnd_level});
 					Clouds_array.push(field.time);
 					Clouds_array.push(field.Clouds);
 					Clouds_array.push(-field.Clouds);
-					var5day.Clouds.push(Clouds_array);
-					var5day.Rain.push({x:field.time,y:field.Rain});
-					var5day.Snow.push({x:field.time,y:field.Snow});
-					var5day.Weather_description.push({x:field.time,y:field.Weather_description});
-					var5day.Weather_icon.push({x:field.time,y:field.Weather_icon});
-					var5day.Icon_id.push({x:field.time,y:field.Icon_id});
-					var5day.Weather_main.push({x:field.time,y:field.Weather_main});
-					var5day.Pressure.push({x:field.time,y:field.Pressure});
-					var5day.Wind_speed.push({x:field.time,y:field.Wind_speed});
-					var5day.Wind_deg.push({x:field.time,y:0,wind_deg:field.Wind_deg});
+					data5Day.setClouds(Clouds_array);
+					data5Day.setRain({x:field.time,y:field.Rain});
+					data5Day.setSnow({x:field.time,y:field.Snow});
+					data5Day.setWeather_description({x:field.time,y:field.Weather_description});
+					data5Day.setWeather_icon({x:field.time,y:field.Weather_icon});
+					data5Day.setIcon_id({x:field.time,y:field.Icon_id});
+					data5Day.setWeather_main({x:field.time,y:field.Weather_main});
+					data5Day.setPressure({x:field.time,y:field.Pressure});
+					data5Day.setWind_speed({x:field.time,y:field.Wind_speed});
+					data5Day.setWind_deg({x:field.time,y:0,wind_deg:field.Wind_deg});
 				})
 		return var5day;
 	}
