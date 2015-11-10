@@ -1,5 +1,10 @@
 //Global variable:
-	function data(a){
+	var data = (function(){
+		
+		function data(){
+			
+		}
+		
 			var Temperature=[];
 			var Humidity=[];
 			var Clouds=[];
@@ -15,20 +20,51 @@
 			
 			//var that = this;
 			
-			this.getTemperaturPrivileged = function(){return Temperature};
-			this.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
-			this.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
-			this.setClouds = function(myClouds){Clouds.push(myClouds)};
-			this.setRain = function(myRain){Rain.push(myRain)};
-			this.setSnow = function(mySnow){Snow.push(mySnow)};
-			this.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
-			this.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
-			this.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
-			this.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
-			this.setPressure = function(myPressure){Pressure.push(myPressure)};
-			this.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
-			this.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
-	}
+			data.prototype.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
+			data.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
+			data.prototype.setClouds = function(myClouds){Clouds.push(myClouds)};
+			data.prototype.setRain = function(myRain){Rain.push(myRain)};
+			data.prototype.setSnow = function(mySnow){Snow.push(mySnow)};
+			data.prototype.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
+			data.prototype.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
+			data.prototype.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
+			data.prototype.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
+			data.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
+			data.prototype.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
+			data.prototype.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
+			
+			data.prototype.getTemperaturPrivileged = function(){return Temperature};
+			data.prototype.getHumidity = function(){return Humidity};
+			data.prototype.getClouds = function(){return Clouds};
+			data.prototype.getRain = function(){return Rain};
+			data.prototype.getSnow = function(){return Snow};
+			data.prototype.getWeather_description = function(){return Weather_description};
+			data.prototype.getWeather_icon = function(){return Weather_icon};
+			data.prototype.getIcon_id = function(){return Icon_id};
+			data.prototype.getWeather_main = function(){return Weather_main};
+			data.prototype.getPressure = function(){return Pressure};
+			data.prototype.getWind_speed = function(){return Wind_speed};
+			data.prototype.getWind_deg = function(){return Wind_deg};
+			
+			data.prototype.init=function(){
+				console.log("data init!");
+				Temperature=[];
+				Humidity=[];
+				Clouds=[];
+				Rain=[];
+				Snow=[];
+				Weather_description=[];
+				Weather_icon=[];
+				Icon_id=[];
+				Weather_main=[];
+				Pressure=[];
+				Wind_speed=[];
+				Wind_deg=[];
+				
+			};
+			
+			return data;
+	})();
 	/*
 	data.prototype = {
 		constructor:data,
@@ -92,51 +128,56 @@
 	
 	
 	 
-	//var data5Day = Object.create(data);
-	var data5Day = new data();
-	var data16Day = new data(89);
+//	var data5Day = new data();
+	data5Day.prototype = new data;
+	data5Day.prototype.setGrnd_level=function(myGrnd_level){
+		 data5Day.Grnd_level.push(myGrnd_level);
+	}
+	data5Day.prototype.getGrnd_level=function(){
+		 return this.Grnd_level;
+	}
+	function data5Day(){
+		var Grnd_level=[];
+	}
+	var data16Day = new data5Day();
 	
-	data16Day.Temperature=78;
-	
-	console.log(data16Day.getTemperaturPrivileged());
 	console.log(data16Day.Temperature);
 	
-	data5Day.Sea_level=[];
-	data5Day.getSea_level=function(){
+	data16Day.Sea_level=[];
+	data16Day.getSea_level=function(){
 		return this.Sea_level;
 	}
-	data5Day.setSea_level=function(Sea_level){
+	data16Day.setSea_level=function(Sea_level){
 		var Sea_level=Sea_level;
 	}
-	data5Day.Grnd_level=[];
 	
-	data5Day.setGrnd_level=function(myGrnd_level){
-		 Grnd_level.push(myGrnd_level);
-	}
+	
 
 
 	function fillVariables(data){
+		console.log(data);
 			$.each(data,function(i,field){
 					var Clouds_array=[];
-					data5Day.setTemperature({x:field.time,y:field.Temperature});
-					data5Day.setHumidity({x:field.time,y:field.Humidity});
-					data5Day.setSea_level({x:field.time,y:field.Sea_level});
-					data5Day.setGrnd_level.push({x:field.time,y:field.Grnd_level});
+					data16Day.setTemperature({x:field.time,y:field.Temperature});
+					data16Day.setHumidity({x:field.time,y:field.Humidity});
+					data16Day.setSea_level({x:field.time,y:field.Sea_level});
+					data16Day.setGrnd_level({x:field.time,y:field.Grnd_level});
 					Clouds_array.push(field.time);
 					Clouds_array.push(field.Clouds);
 					Clouds_array.push(-field.Clouds);
-					data5Day.setClouds(Clouds_array);
-					data5Day.setRain({x:field.time,y:field.Rain});
-					data5Day.setSnow({x:field.time,y:field.Snow});
-					data5Day.setWeather_description({x:field.time,y:field.Weather_description});
-					data5Day.setWeather_icon({x:field.time,y:field.Weather_icon});
-					data5Day.setIcon_id({x:field.time,y:field.Icon_id});
-					data5Day.setWeather_main({x:field.time,y:field.Weather_main});
-					data5Day.setPressure({x:field.time,y:field.Pressure});
-					data5Day.setWind_speed({x:field.time,y:field.Wind_speed});
-					data5Day.setWind_deg({x:field.time,y:0,wind_deg:field.Wind_deg});
+					data16Day.setClouds(Clouds_array);
+					data16Day.setRain({x:field.time,y:field.Rain});
+					data16Day.setSnow({x:field.time,y:field.Snow});
+					data16Day.setWeather_description({x:field.time,y:field.Weather_description});
+					data16Day.setWeather_icon({x:field.time,y:field.Weather_icon});
+					data16Day.setIcon_id({x:field.time,y:field.Icon_id});
+					data16Day.setWeather_main({x:field.time,y:field.Weather_main});
+					data16Day.setPressure({x:field.time,y:field.Pressure});
+					data16Day.setWind_speed({x:field.time,y:field.Wind_speed});
+					data16Day.setWind_deg({x:field.time,y:0,wind_deg:field.Wind_deg});
 				})
-		return var5day;
+				console.log(data16Day.getPressure());
+		return data16Day;
 	}
 	
 //-----------------------------------FUNCTION SECTION--------------------------------------------------------------------------
