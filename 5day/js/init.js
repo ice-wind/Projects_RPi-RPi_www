@@ -1,7 +1,7 @@
 //Global variable:
-	var data = (function(){
+	var baseData = (function(){
 		
-		function data(){
+		function baseData(){
 			
 		}
 		
@@ -20,33 +20,33 @@
 			
 			//var that = this;
 			
-			data.prototype.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
-			data.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
-			data.prototype.setClouds = function(myClouds){Clouds.push(myClouds)};
-			data.prototype.setRain = function(myRain){Rain.push(myRain)};
-			data.prototype.setSnow = function(mySnow){Snow.push(mySnow)};
-			data.prototype.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
-			data.prototype.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
-			data.prototype.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
-			data.prototype.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
-			data.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
-			data.prototype.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
-			data.prototype.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
+			baseData.prototype.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
+			baseData.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
+			baseData.prototype.setClouds = function(myClouds){Clouds.push(myClouds)};
+			baseData.prototype.setRain = function(myRain){Rain.push(myRain)};
+			baseData.prototype.setSnow = function(mySnow){Snow.push(mySnow)};
+			baseData.prototype.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
+			baseData.prototype.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
+			baseData.prototype.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
+			baseData.prototype.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
+			baseData.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
+			baseData.prototype.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
+			baseData.prototype.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
 			
-			data.prototype.getTemperaturPrivileged = function(){return Temperature};
-			data.prototype.getHumidity = function(){return Humidity};
-			data.prototype.getClouds = function(){return Clouds};
-			data.prototype.getRain = function(){return Rain};
-			data.prototype.getSnow = function(){return Snow};
-			data.prototype.getWeather_description = function(){return Weather_description};
-			data.prototype.getWeather_icon = function(){return Weather_icon};
-			data.prototype.getIcon_id = function(){return Icon_id};
-			data.prototype.getWeather_main = function(){return Weather_main};
-			data.prototype.getPressure = function(){return Pressure};
-			data.prototype.getWind_speed = function(){return Wind_speed};
-			data.prototype.getWind_deg = function(){return Wind_deg};
+			baseData.prototype.getTemperaturPrivileged = function(){return Temperature};
+			baseData.prototype.getHumidity = function(){return Humidity};
+			baseData.prototype.getClouds = function(){return Clouds};
+			baseData.prototype.getRain = function(){return Rain};
+			baseData.prototype.getSnow = function(){return Snow};
+			baseData.prototype.getWeather_description = function(){return Weather_description};
+			baseData.prototype.getWeather_icon = function(){return Weather_icon};
+			baseData.prototype.getIcon_id = function(){return Icon_id};
+			baseData.prototype.getWeather_main = function(){return Weather_main};
+			baseData.prototype.getPressure = function(){return Pressure};
+			baseData.prototype.getWind_speed = function(){return Wind_speed};
+			baseData.prototype.getWind_deg = function(){return Wind_deg};
 			
-			data.prototype.init=function(){
+			baseData.prototype.init=function(){
 				console.log("data init!");
 				Temperature=[];
 				Humidity=[];
@@ -60,11 +60,37 @@
 				Pressure=[];
 				Wind_speed=[];
 				Wind_deg=[];
+			};
+			baseData.prototype.fillVariables = function(JSONdata){
 				
+				$.each(JSONdata,function(i,field){
+					var Clouds_array=[];
+					Temperature.push({x:field.time,y:field.Temperature});
+					Humidity.push({x:field.time,y:field.Humidity});
+					Clouds_array.push(field.time);
+					Clouds_array.push(field.Clouds);
+					Clouds_array.push(-field.Clouds);
+					Clouds.push(Clouds_array);
+					Rain.push({x:field.time,y:field.Rain});
+					Snow.push({x:field.time,y:field.Snow});
+					Weather_description.push({x:field.time,y:field.Weather_description});
+					Weather_icon.push({x:field.time,y:field.Weather_icon});
+					Icon_id.push({x:field.time,y:field.Icon_id});
+					Weather_main.push({x:field.time,y:field.Weather_main});
+					Pressure.push({x:field.time,y:field.Pressure});
+					Wind_speed.push({x:field.time,y:field.Wind_speed});
+					Wind_deg.push({x:field.time,y:0,wind_deg:field.Wind_deg});
+				});
 			};
 			
-			return data;
+			return baseData;
 	})();
+	
+	//*******************************************************************************
+	
+
+
+	
 	/*
 	data.prototype = {
 		constructor:data,
@@ -124,61 +150,53 @@
 			this.Wind_deg=Wind_deg;
 		}
 	}*/
+	//data.prototype = new data;
+
+	//var data16Day = new data;
 	
-	
-	
-	 
-//	var data5Day = new data();
-	data5Day.prototype = new data;
-	data5Day.prototype.setGrnd_level=function(myGrnd_level){
-		 data5Day.Grnd_level.push(myGrnd_level);
-	}
-	data5Day.prototype.getGrnd_level=function(){
-		 return this.Grnd_level;
-	}
-	function data5Day(){
+	console.log(baseData);
+	var prepare_data5Day=function (){
+		baseData.call(this);
+		console.log();
 		var Grnd_level=[];
-	}
-	var data16Day = new data5Day();
-	
-	console.log(data16Day.Temperature);
-	
-	data16Day.Sea_level=[];
-	data16Day.getSea_level=function(){
-		return this.Sea_level;
-	}
-	data16Day.setSea_level=function(Sea_level){
-		var Sea_level=Sea_level;
-	}
-	
-	
+		var Sea_level=[];
+		
+		prepare_data5Day.prototype.setGrnd_level=function(myGrnd_level){
+		Grnd_level.push(myGrnd_level);
+		}
+		
+		prepare_data5Day.prototype.getGrnd_level=function(){
+		return Grnd_level;
+		}
+		
+		prepare_data5Day.prototype.getSea_level=function(){
+		return Sea_level;
+		}
+		
+		prepare_data5Day.prototype.setSea_level=function(mySea_level){
+			Sea_level.push(mySea_level);
+		}
 
-
-	function fillVariables(data){
-		console.log(data);
-			$.each(data,function(i,field){
-					var Clouds_array=[];
-					data16Day.setTemperature({x:field.time,y:field.Temperature});
-					data16Day.setHumidity({x:field.time,y:field.Humidity});
-					data16Day.setSea_level({x:field.time,y:field.Sea_level});
-					data16Day.setGrnd_level({x:field.time,y:field.Grnd_level});
-					Clouds_array.push(field.time);
-					Clouds_array.push(field.Clouds);
-					Clouds_array.push(-field.Clouds);
-					data16Day.setClouds(Clouds_array);
-					data16Day.setRain({x:field.time,y:field.Rain});
-					data16Day.setSnow({x:field.time,y:field.Snow});
-					data16Day.setWeather_description({x:field.time,y:field.Weather_description});
-					data16Day.setWeather_icon({x:field.time,y:field.Weather_icon});
-					data16Day.setIcon_id({x:field.time,y:field.Icon_id});
-					data16Day.setWeather_main({x:field.time,y:field.Weather_main});
-					data16Day.setPressure({x:field.time,y:field.Pressure});
-					data16Day.setWind_speed({x:field.time,y:field.Wind_speed});
-					data16Day.setWind_deg({x:field.time,y:0,wind_deg:field.Wind_deg});
-				})
-				console.log(data16Day.getPressure());
-		return data16Day;
+		prepare_data5Day.prototype.fillVariables = function(externalJSONdata){
+			
+			baseData.prototype.fillVariables(externalJSONdata);
+			
+			$.each(externalJSONdata,function(i,field){
+				prepare_data5Day.prototype.setSea_level({x:field.time,y:field.Sea_level});
+				prepare_data5Day.prototype.setGrnd_level({x:field.time,y:field.Grnd_level});
+			});
+		}
+		prepare_data5Day.prototype.init=function(){
+			baseData.prototype.init();
+			Grnd_level=[];
+			Sea_level=[];
+		}
+		
 	}
+	console.log(prepare_data5Day);
+	prepare_data5Day.prototype = new baseData;
+	var data5Day = new prepare_data5Day;
+
 	
 //-----------------------------------FUNCTION SECTION--------------------------------------------------------------------------
 

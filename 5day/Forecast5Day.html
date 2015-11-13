@@ -21,7 +21,7 @@
 		console.log("start main:");
 		
 		loadJSON5Day(function(data){
-			data5Day = fillVariables(data,data5Day);
+			data5Day.fillVariables(data,data5Day);
 			createCharts();
 		});
 		

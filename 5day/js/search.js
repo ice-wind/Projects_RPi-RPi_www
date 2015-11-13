@@ -63,29 +63,31 @@ function getForecastData(city_id,city_name){
 			success:function(response){
 			
 		
-				data16Day.init();
-				fillVariables(response);
+				data5Day.init();
+				data5Day.fillVariables(response);
 
 				
 				
 				var container = $('#container').highcharts();
-				container.series[0].setData(data16Day.getTemperaturPrivileged());
-				container.series[1].setData(data16Day.getHumidity());
-				container.series[2].setData(data16Day.getRain());
-				container.series[3].setData(data16Day.getSnow());
-				container.series[4].setData(data16Day.getClouds());
+				container.series[0].setData(data5Day.getTemperaturPrivileged());
+				container.series[1].setData(data5Day.getHumidity());
+				container.series[2].setData(data5Day.getRain());
+				container.series[3].setData(data5Day.getSnow());
+				container.series[4].setData(data5Day.getClouds());
 				
 				var wind = $('#graph_windSpeed').highcharts();
-				wind.series[0].setData(data16Day.getWind_speed());
-				wind.series[1].setData(data16Day.getWind_deg());
+				wind.series[0].setData(data5Day.getWind_speed());
+				wind.series[1].setData(data5Day.getWind_deg());
 				
 				var pressure = $('#2graph_pressure').highcharts();
-				pressure.series[0].setData(data16Day.getPressure());
-				pressure.series[1].setData(data16Day.getGrnd_level());
+				pressure.series[0].setData(data5Day.getPressure());
+				console.log(data5Day.getGrnd_level());
+				pressure.series[1].setData(data5Day.getGrnd_level());
 				
 				var sea_level = $('#3graph_sealevel').highcharts();
-				sea_level.series[0].setData(data16Day.getSea_level());
-					
+				console.log(data5Day.getSea_level());
+				sea_level.series[0].setData(data5Day.getSea_level());
+				console.log(data5Day.Sea_level);	
 			},
 			error: function(jqXHR, exception) {
 				console.log(jqXHR);
