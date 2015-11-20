@@ -21,30 +21,34 @@
 		console.log("start main:");
 		
 		loadJSON5Day(function(data){
-			data5Day.fillVariables(data,data5Day);
+		console.log(data);
+		console.log(data5Day);
+			data5Day.fillVariables(data);
+			console.log("loaded");
 			createCharts();
 		});
 		
 		//---------------------------END load data---------------------------
+		console.log(data5Day);
 //------------------------------------DEFINITION MAIN TEMERATURE-------------------------------
-			main_options.series[0].data=data5Day.Temperature;
-			main_options.series[1].data=data5Day.Humidity;
-			main_options.series[2].data=data5Day.Rain;
-			main_options.series[3].data=data5Day.Snow;
-			main_options.series[4].data=data5Day.Clouds;
+			main_options.series[0].data=data5Day.getTemperature;
+			main_options.series[1].data=data5Day.getHumidity;
+			main_options.series[2].data=data5Day.getRain;
+			main_options.series[3].data=data5Day.getSnow;
+			main_options.series[4].data=data5Day.getClouds;
 			
 //----------------------------------------DEFINITION CHART WIND--------------------------------		
-			options_windSpeed.series[0].data=data5Day.Wind_speed;
-			options_windSpeed.series[1].data=data5Day.Wind_deg;
+			options_windSpeed.series[0].data=data5Day.getWind_speed;
+			options_windSpeed.series[1].data=data5Day.getWind_deg;
 			options_windSpeed.series[1].dataLabels.formatter=function(){
 				var wind_deg=this.point.wind_deg;									
 				return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
 			};
 //----------------------------------------DEFINITION CHART PRESSURE--------------------------------			
-			options_pressure.series[0].data=data5Day.Pressure;
-			options_pressure.series[1].data=data5Day.Grnd_level;
+			options_pressure.series[0].data=data5Day.getPressure;
+			options_pressure.series[1].data=data5Day.getGrnd_level;
 //----------------------------------------DEFINITION CHART SEA LEVEL--------------------------------							
-			options_sealevel.series[0].data=data5Day.Sea_level;
+			options_sealevel.series[0].data=data5Day.getSea_level;
 //---------------------------------------GAUGE OPTIONS--------------------------------------------------
 
 	gaugeOptions_Temperature.series=[{

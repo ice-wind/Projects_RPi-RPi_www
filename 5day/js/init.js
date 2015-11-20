@@ -1,12 +1,83 @@
-//Global variable:
-	var baseData = (function(){
+//OOP functions
+	function extend(child, Parent){
+		child.prototype = inherit(Parent.prototype);
+		child.prototype.constructor = child; 	//zvyk, aby instancia odkazovala na svoj konstruktor
+		child.parent = Parent.prototype;  		//volanie prepisanych metod
+	}
+	function inherit(proto){
+		function F(){}
+		F.prototype = proto
+		return new F
+	}
+	
+//DEFINE Objects
+	function elementData(){
+		var Temperature=[];
+		var Humidity=[];
+		var Pressure=[];
 		
-		function baseData(){
+		elementData.prototype.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
+		elementData.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
+		elementData.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
 			
-		}
+		elementData.prototype.getTemperaturPrivileged = function(){return Temperature};
+		elementData.prototype.getHumidity = function(){return Humidity};
+		elementData.prototype.getPressure = function(){return Pressure};
 		
-			var Temperature=[];
-			var Humidity=[];
+		elementData.prototype.variableFree = function(){
+			console.log(Temperature);
+			Temperature=[];
+			Humidity=[];
+			Pressure=[];
+			console.log("clear temp");
+			console.log(Temperature);
+		};
+		elementData.prototype.fillVariables = function(JSONdata){
+			$.each(JSONdata,function(i,field){
+				Temperature.push({x:field.time,y:field.Temperature});
+				Humidity.push({x:field.time,y:field.Humidity});
+				Pressure.push({x:field.time,y:field.Pressure});
+			});
+		};
+	};
+	
+	function prepare_RPiData(){
+		
+		elementData.call(this);
+		var self = this;
+		var TemperatureIn=[];
+		var TemperatureOut=[];
+		var Sea_level=[];
+		var Grnd_level=[];
+		
+		prepare_RPiData.prototype.getTemperatureIn=function(){return TemperatureIn};
+		prepare_RPiData.prototype.TemperatureOut=function(){return TemperatureOut};
+		prepare_RPiData.prototype.Sea_level=function(){return Sea_level};
+		prepare_RPiData.prototype.Grnd_level=function(){return Grnd_level};
+		
+		prepare_RPiData.prototype.variableFree = function(){
+			elementData.prototype.variableFree();
+			TemperatureIn=[];
+			TemperatureOut=[];
+			Sea_level=[];
+			Grnd_level=[];
+		};
+		prepare_RPiData.prototype.fillVariables = function(JSONdata){
+			elementData.prototype.fillVariables(JSONdata);
+			$.each(JSONdata,function(i,field){
+				TemperatureIn.push({x:field.time,y:field.TemperatureIn});
+				TemperatureOut.push({x:field.time,y:field.TemperatureOut});
+				Sea_level.push({x:field.time,y:field.Sea_level});
+				Grnd_level.push({x:field.time,y:field.Grnd_level});
+			});
+		};
+	};
+	extend(prepare_RPiData,elementData);
+
+	function baseForecastData (){
+		
+		elementData.call(this);
+
 			var Clouds=[];
 			var Rain=[];
 			var Snow=[];
@@ -14,42 +85,31 @@
 			var Weather_icon=[];
 			var Icon_id=[];
 			var Weather_main=[];
-			var Pressure=[];
 			var Wind_speed=[];
 			var Wind_deg=[];
 			
-			//var that = this;
+			baseForecastData.prototype.setClouds = function(myClouds){Clouds.push(myClouds)};
+			baseForecastData.prototype.setRain = function(myRain){Rain.push(myRain)};
+			baseForecastData.prototype.setSnow = function(mySnow){Snow.push(mySnow)};
+			baseForecastData.prototype.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
+			baseForecastData.prototype.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
+			baseForecastData.prototype.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
+			baseForecastData.prototype.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
+			baseForecastData.prototype.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
+			baseForecastData.prototype.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
 			
-			baseData.prototype.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
-			baseData.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
-			baseData.prototype.setClouds = function(myClouds){Clouds.push(myClouds)};
-			baseData.prototype.setRain = function(myRain){Rain.push(myRain)};
-			baseData.prototype.setSnow = function(mySnow){Snow.push(mySnow)};
-			baseData.prototype.setWeather_description = function(myWeather_description){Weather_description.push(myWeather_description)};
-			baseData.prototype.setWeather_icon = function(myWeather_icon){Weather_icon.push(myWeather_icon)};
-			baseData.prototype.setIcon_id = function(myIcon_id){Icon_id.push(myIcon_id)};
-			baseData.prototype.setWeather_main = function(myWeather_main){Weather_main.push(myWeather_main)};
-			baseData.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
-			baseData.prototype.setWind_speed = function(myWind_speed){Wind_speed.push(myWind_speed)};
-			baseData.prototype.setWind_deg = function(myWind_deg){Wind_deg.push(myWind_deg)};
+			baseForecastData.prototype.getClouds = function(){return Clouds};
+			baseForecastData.prototype.getRain = function(){return Rain};
+			baseForecastData.prototype.getSnow = function(){return Snow};
+			baseForecastData.prototype.getWeather_description = function(){return Weather_description};
+			baseForecastData.prototype.getWeather_icon = function(){return Weather_icon};
+			baseForecastData.prototype.getIcon_id = function(){return Icon_id};
+			baseForecastData.prototype.getWeather_main = function(){return Weather_main};
+			baseForecastData.prototype.getWind_speed = function(){return Wind_speed};
+			baseForecastData.prototype.getWind_deg = function(){return Wind_deg};
 			
-			baseData.prototype.getTemperaturPrivileged = function(){return Temperature};
-			baseData.prototype.getHumidity = function(){return Humidity};
-			baseData.prototype.getClouds = function(){return Clouds};
-			baseData.prototype.getRain = function(){return Rain};
-			baseData.prototype.getSnow = function(){return Snow};
-			baseData.prototype.getWeather_description = function(){return Weather_description};
-			baseData.prototype.getWeather_icon = function(){return Weather_icon};
-			baseData.prototype.getIcon_id = function(){return Icon_id};
-			baseData.prototype.getWeather_main = function(){return Weather_main};
-			baseData.prototype.getPressure = function(){return Pressure};
-			baseData.prototype.getWind_speed = function(){return Wind_speed};
-			baseData.prototype.getWind_deg = function(){return Wind_deg};
-			
-			baseData.prototype.init=function(){
-				console.log("data init!");
-				Temperature=[];
-				Humidity=[];
+			baseForecastData.prototype.variableFree=function(){
+				elementData.prototype.variableFree();
 				Clouds=[];
 				Rain=[];
 				Snow=[];
@@ -57,16 +117,15 @@
 				Weather_icon=[];
 				Icon_id=[];
 				Weather_main=[];
-				Pressure=[];
 				Wind_speed=[];
 				Wind_deg=[];
 			};
-			baseData.prototype.fillVariables = function(JSONdata){
+			baseForecastData.prototype.fillVariables = function(JSONdatas){
+				console.log("sv");
+				elementData.prototype.fillVariables(JSONdatas);
 				
-				$.each(JSONdata,function(i,field){
+				$.each(JSONdatas,function(i,field){
 					var Clouds_array=[];
-					Temperature.push({x:field.time,y:field.Temperature});
-					Humidity.push({x:field.time,y:field.Humidity});
 					Clouds_array.push(field.time);
 					Clouds_array.push(field.Clouds);
 					Clouds_array.push(-field.Clouds);
@@ -77,127 +136,47 @@
 					Weather_icon.push({x:field.time,y:field.Weather_icon});
 					Icon_id.push({x:field.time,y:field.Icon_id});
 					Weather_main.push({x:field.time,y:field.Weather_main});
-					Pressure.push({x:field.time,y:field.Pressure});
 					Wind_speed.push({x:field.time,y:field.Wind_speed});
 					Wind_deg.push({x:field.time,y:0,wind_deg:field.Wind_deg});
 				});
 			};
-			
-			return baseData;
-	})();
-	
-	//*******************************************************************************
-	
+	};
+	extend(baseForecastData,elementData);
+//*******************************************************************************
 
-
-	
-	/*
-	data.prototype = {
-		constructor:data,
-		getTemperature:function(){
-			return this.Temperature;
-		},
-		getHumidity:function(){
-			return this.Humidity;
-		},
-		getClouds:function(){
-			return this.Clouds;
-		},
-		getRain:function(){
-			return this.Rain;
-		},
-		getSnow:function(){
-			return this.Snow;
-		},
-		getWeather_description:function(){
-			return this.Weather_description;
-		},
-		getWeather_icon:function(){
-			return this.Weather_icon;
-		},
-		getIcon_id:function(){
-			return this.Icon_id;
-		},
-		getWeather_main:function(){
-			return this.Weather_main;
-		},
-		getPressure:function(){
-			return this.Pressure;
-		},
-		getWind_speed:function(){
-			return this.Wind_speed;
-		},
-		getWind_deg:function(){
-			return this.Wind_deg;
-		},
-		
-		
-		setTemperature:function(Temperature){
-			this.Temperature=Temperature;
-		},
-		setData:function(Temperature,Humidity,Clouds,Rain,Snow,Weather_description,Weather_icon,Icon_id,Weather_main,Pressure,Wind_speed,Wind_deg){
-			this.Temperature=Temperature,
-			this.Humidity=Humidity,
-			this.Clouds=Clouds,
-			this.Rain=Rain,
-			this.Snow=Snow,
-			this.Weather_description=Weather_description,
-			this.Weather_icon=Weather_icon,
-			this.Icon_id=Icon_id,
-			this.Weather_main=Weather_main,
-			this.Pressure=Pressure,
-			this.Wind_speed=Wind_speed,
-			this.Wind_deg=Wind_deg;
-		}
-	}*/
-	//data.prototype = new data;
-
-	//var data16Day = new data;
-	
-	console.log(baseData);
-	var prepare_data5Day=function (){
-		baseData.call(this);
-		console.log();
+	function prepare_data5Day (){
+		var self = this;
+		baseForecastData.call(this);
 		var Grnd_level=[];
 		var Sea_level=[];
 		
-		prepare_data5Day.prototype.setGrnd_level=function(myGrnd_level){
-		Grnd_level.push(myGrnd_level);
-		}
+		prepare_data5Day.prototype.setGrnd_level=function(myGrnd_level){Grnd_level.push(myGrnd_level);}
+		prepare_data5Day.prototype.setSea_level=function(mySea_level){Sea_level.push(mySea_level);}
 		
-		prepare_data5Day.prototype.getGrnd_level=function(){
-		return Grnd_level;
-		}
+		prepare_data5Day.prototype.getGrnd_level=function(){return Grnd_level;}
+		prepare_data5Day.prototype.getSea_level=function(){return Sea_level;}
 		
-		prepare_data5Day.prototype.getSea_level=function(){
-		return Sea_level;
-		}
-		
-		prepare_data5Day.prototype.setSea_level=function(mySea_level){
-			Sea_level.push(mySea_level);
-		}
-
 		prepare_data5Day.prototype.fillVariables = function(externalJSONdata){
-			
-			baseData.prototype.fillVariables(externalJSONdata);
-			
+			//self.__proto__.constructor.parent.fillVariables(externalJSONdata);
+			baseForecastData.prototype.fillVariables(externalJSONdata);
 			$.each(externalJSONdata,function(i,field){
 				prepare_data5Day.prototype.setSea_level({x:field.time,y:field.Sea_level});
 				prepare_data5Day.prototype.setGrnd_level({x:field.time,y:field.Grnd_level});
 			});
 		}
-		prepare_data5Day.prototype.init=function(){
-			baseData.prototype.init();
+		prepare_data5Day.prototype.variableFree=function(){
+			baseForecastData.prototype.variableFree();
 			Grnd_level=[];
 			Sea_level=[];
 		}
-		
 	}
-	console.log(prepare_data5Day);
-	prepare_data5Day.prototype = new baseData;
-	var data5Day = new prepare_data5Day;
-
+	extend(prepare_data5Day,baseForecastData);
 	
+	var RPiData = new prepare_RPiData;
+	var data5Day = new prepare_data5Day;
+	var data16Day = new baseForecastData;
+	
+
 //-----------------------------------FUNCTION SECTION--------------------------------------------------------------------------
 
 //-------------------------------round corner in gauge-----------------------------------------		
