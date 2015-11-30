@@ -1,12 +1,5 @@
 
-$(document).ready(function () {
-	$('body').on('click','*',function(){
-		$("#livesearch").slideUp();
-	});
 	
-	$("form").submit(function(e){
-		e.preventDefault();
-	});
 	/*
 	$("body").on("change",".search",function(){
 		var city_name = $(".search").val();
@@ -16,15 +9,15 @@ $(document).ready(function () {
 		//$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
 	});
 	*/
-});
+
 		
-function handle_key(e){
+function handle_pressKeyboard(e){
 	if(e.which === 13){
 		var city_name = $(".search").val();
 		if($(".city")[0]){
 			var city_id = $(".city").val(city_name);
 			var city_id = $(city_id[0].outerHTML)[0].getAttribute("data-ID");
-			$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
+			$("#livesearch").slideUp("fast",getForecastData(city_id));
 		}
 	}else 
 		if(e.which == 8){// <-
@@ -34,11 +27,11 @@ function handle_key(e){
 	}
 }
 
-function passCityData(object){
+function onClickHandlerCityData(object){
 	var city_id = object.getAttribute("data-ID");
 	var city_name = object.innerHTML;
 	$(".search").val(city_name);
-	$("#livesearch").slideUp("fast",getForecastData(city_id,city_name));
+	$("#livesearch").slideUp("fast",getForecastData(city_id));
 }
 function isMenuChoice5Day(){
 	if(getMenuSelection()==='2'){
@@ -47,9 +40,14 @@ function isMenuChoice5Day(){
 		return false;
 }
 			
-function getForecastData(city_id,city_name){
-	console.log("ajax request data");
-	if(isMenuChoice5Day()){
+function getForecastData(city_id){
+	GLOBAL_options.actualCitySelection=city_id;
+	if(!city_id){
+		city_id="3060972";
+		$(".search").val("Bratislava");
+	}
+	var selected5Day=isMenuChoice5Day();
+	if(selected5Day){
 		var url = "php/getDBdata_5Day.php";
 	}
 	else{
@@ -61,7 +59,11 @@ function getForecastData(city_id,city_name){
 			dataType: "json",
 			data:	{city_id:city_id},
 			success:function(response){
-						update5DayCharts(response);
+				if(selected5Day){
+					update5DayCharts(response);
+				}else{
+					update16DayCharts(response);
+				}
 					
 			},
 			error: function(jqXHR, exception) {
@@ -91,33 +93,47 @@ function getForecastData(city_id,city_name){
 }
 function update5DayCharts(response){
 	data5Day.variableFree();
-	data5Day.fillVariables(response);			
-	
+	data5Day.fillVariables(response);	
 	var container = $('#container').highcharts();
-	container.series[0].setData(data5Day.getTemperaturPrivileged());
+	if(!container){
+		create5DayCharts();
+		var container = $('#container').highcharts();
+	}
+	container.series[0].setData(data5Day.getTemperature());
 	container.series[1].setData(data5Day.getHumidity());
 	container.series[2].setData(data5Day.getRain());
 	container.series[3].setData(data5Day.getSnow());
 	container.series[4].setData(data5Day.getClouds());
 	
+	console.log(data5Day.getTemperature());
+	console.log(data5Day.getTemperatureNow());
 	var wind = $('#graph_windSpeed').highcharts();
 	wind.series[0].setData(data5Day.getWind_speed());
 	wind.series[1].setData(data5Day.getWind_deg());
-	
-	var pressure = $('#2graph_pressure').highcharts();
+	console.log(data5Day.getWind_deg());
+	var pressure = $('#graph_pressure').highcharts();
 	pressure.series[0].setData(data5Day.getPressure());
 	pressure.series[1].setData(data5Day.getGrnd_level());
 	
-	var sea_level = $('#3graph_sealevel').highcharts();
+	var sea_level = $('#graph_sealevel').highcharts();
 	sea_level.series[0].setData(data5Day.getSea_level());
-	console.log(data5Day.Sea_level);
+
+	
+	var gauge1 = $('#1gauge').highcharts();
+	gauge1.series[0].points[0].update(data5Day.getTemperatureNow());
+	var gauge2 = $('#2gauge').highcharts();
+	gauge2.series[0].points[0].update(data5Day.getHumidityNow());
+	var gauge3 = $('#3gauge').highcharts();
+	gauge3.series[0].points[0].update(data5Day.getPressureNow());
 }
 function update16DayCharts(response){
 	data16Day.variableFree();
 	data16Day.fillVariables(response);			
-	
+	console.log(data16Day);
+	console.log(data16Day.getTemperature());
 	var container = $('#container').highcharts();
-	container.series[0].setData(data16Day.getTemperaturPrivileged());
+	
+	container.series[0].setData(data16Day.getTemperature());
 	container.series[1].setData(data16Day.getHumidity());
 	container.series[2].setData(data16Day.getRain());
 	container.series[3].setData(data16Day.getSnow());
@@ -127,9 +143,15 @@ function update16DayCharts(response){
 	wind.series[0].setData(data16Day.getWind_speed());
 	wind.series[1].setData(data16Day.getWind_deg());
 	
-	var pressure = $('#2graph_pressure').highcharts();
+	var pressure = $('#graph_pressure').highcharts();
 	pressure.series[0].setData(data16Day.getPressure());
-
+	
+	var gauge1 = $('#1gauge').highcharts();
+	gauge1.series[0].points[0].update(data16Day.getTemperatureNow());
+	var gauge2 = $('#2gauge').highcharts();
+	gauge2.series[0].points[0].update(data16Day.getHumidityNow());
+	var gauge3 = $('#3gauge').highcharts();
+	gauge3.series[0].points[0].update(data16Day.getPressureNow());
 }
 
 function showSearchSugestionResult(){
@@ -150,7 +172,7 @@ function showSearchSugestionResult(){
 					response=JSON.parse(response);
 					$.each(response,function(i,data){
 						if(i==0){firstCity=data.NAME}
-						cityList+='<div class="city" onclick="passCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
+						cityList+='<div class="city" onclick="onClickHandlerCityData(this)" data-ID="'+data.ID+'";>'+data.NAME+'</div>'
 					});
 					
 					var suggestion =firstCity;
@@ -176,4 +198,6 @@ function showSearchSugestionResult(){
 	}
 	return false;
 }
+
+
 			 

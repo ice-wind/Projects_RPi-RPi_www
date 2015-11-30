@@ -1,55 +1,6 @@
-//----------------------------------- global CHART options--------------------------------------------
-Highcharts.setOptions({
-	global: {
-		timezoneOffset: 6 * 60
-	},
-	xAxis: {
-			name: 'time',
-			type: 'datetime',
-			ordinal: false,
-			crosshair:false,
-			gridLineWidth:1
-	},
-	tooltip:{
-			useHTML: true,
-			formatter: function(){
-				var picture_url = '';
-				if(this.series.name == "Temp In"){
-					picture_url = '<img src="img/Temp.png" title="" alt="" border="1" height="25" width="22" align="center">';
-				}else
-				if(this.series.name == "Hum"){
-					picture_url = '<img src="img/Hum.png" title="" alt="" border="1" height="25" width="22" align="center">';
-				}else
-				if(this.series.name = "Temp Out"){
-					picture_url = '<img src="img/Press.png" title="" alt="" border="1" height="25" width="22" align="center">';
-					}
-				else
-					{
-					picture_url = ' ';
-					}
-					return picture_url+'<b>' + this.series.name + '</b><br/>' + 
-					Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>'+
-					Highcharts.numberFormat(this.y, 2);
-			}					
-	},
-	plotOptions:{
-			areaspline:{
-					fillOpacity:0.1
-			},
-			spline:{
-					states:{
-						hover:{
-							lineWidth:4
-						}
-					}
-				}
-	},
-	credits: {
-		enabled: false
-	}
-});	
+
 //------------------------------DEFINITION MAIN CHART-----------------------------------------------------
-	var main_options5Day = {
+	var main_options16Day = {
 			chart: {
 				spacingTop: 90,
 				renderTo: 'container',
@@ -280,7 +231,7 @@ Highcharts.setOptions({
 			}]
 		}
 //--------------------------------------WIND----------------------------		
-var options_windSpeed5Day = {
+var options_windSpeed16Day = {
 		chart: {
 			renderTo: 'graph_windSpeed',
 			type: 'spline',
@@ -491,16 +442,17 @@ var options_windSpeed5Day = {
 					formatter:function(){
 						var wind_deg=this.point.wind_deg;				
 						return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
-					},
-				},
+					}
+			},
 			marker: {
                     enabled: false
             },
 			color:'#D7D7D7',
+			
 		}]
 }	
 //-------------------------------------PRESURE---------------------------------		
-var options_pressure5Day = {
+var options_pressure16Day = {
 		chart: {
 			renderTo: 'graph_pressure',
 			type: 'spline',
@@ -525,22 +477,6 @@ var options_pressure5Day = {
 				}
 			},
 			opposite: false,
-		},{
-			gridLineWidth:1,
-			minorTickInterval: 'auto',
-			title: {
-				text: 'Altitude',
-				style: {
-					color: '#5C83A3'
-					}
-			},
-			labels:{
-				format: '{value} Pa',
-				style:{
-					color:'#5C83A3'
-				}
-			},
-			opposite: true,
 		}],
 		series:[{
 			name: 'Pressure',
@@ -552,61 +488,12 @@ var options_pressure5Day = {
 				valueSuffix: 'Pa',
 			},
 			dashStyle: 'longdash'
-		},{
-			name: 'Ground level',
-			type: 'spline',
-			yAxis: 1,
-			data: [],
-			enableMouseTracking: true,
-			color: '#EA8D11',
-			tooltip:{
-				valueSuffix: 'Pa',
-			}
 		}]
 	
 }
-//--------------------------------- Chart Sea level ----------------------------------------------
-var options_sealevel5Day = {
-		chart: {
-			renderTo: 'graph_sealevel',
-			type: 'spline',
-			zoomType:'x'
-		},
-		title: {
-			text: 'Sea level'
-		},
-		yAxis: {
-			gridLineWidth:1,
-			minorTickInterval: 'auto',
-			title: {
-				text: 'Sea level',
-				style: {
-					color: '#EA8D11'
-					}
-			},
-			labels:{
-				format: '{value} Pa',
-				style:{
-					color:'#EA8D11'
-				}
-			},
-			opposite: false,
-		},
-		series:[{
-			name: 'Sea_level',
-			type: 'spline',
-			yAxis: 0,
-			data: [],
-			enableMouseTracking: true,
-			color: '#EA8D11',
-			tooltip:{
-				valueSuffix: 'Pa',
-			}
-		}]
-}
 //----------------------------END of graph def-----------------------------------		
 //----------------------------Gauge default options--------------------------------------
-var defaultGaugeOptions = {
+var defaultGaugeOptions16Day = {
 
 					chart: {
 		type: 'solidgauge',
@@ -656,7 +543,7 @@ var defaultGaugeOptions = {
 		}
 }		
 //---------------------------gauge1 options----------------------------------------
-					var gaugeOptions_Temperature5Day = {
+					var gaugeOptions_Temperature16Day = {
 							chart: {
 								renderTo: '1gauge'
 							},
@@ -689,7 +576,7 @@ var defaultGaugeOptions = {
 								enabled: false
 							}
 					}
-					var gaugeOptions_Humidity5Day = {
+					var gaugeOptions_Humidity16Day = {
 							chart: {
 								renderTo: '2gauge'
 							},
@@ -715,22 +602,20 @@ var defaultGaugeOptions = {
 								enabled: false
 							}
 					}
-					var gaugeOptions_Pressure5Day = {
+					var gaugeOptions_Pressure16Day = {
 							chart: {
 								renderTo: '3gauge'
 							},
 							yAxis: {
 								min: 0,
-								max: 20000,
-								minColor: '#99D6AD',
-								maxColor: '#005C1F',
+								max: 50000,
 								title: {
 									text: 'Pressure'
 								}
 							},
 							plotOptions:{
 								solidgauge:{
-									borderColor:'purple'
+									borderColor:'orange'
 								}
 							},
 							tooltip:{
@@ -745,44 +630,41 @@ var defaultGaugeOptions = {
 							}],
 							credits: {
 								enabled: false
-							}
+							},
+							
 					}
-					
 //--------------------------end of gauge options------------------------------------
-function create5DayCharts(){
+function create16DayCharts(){
 		//--------------------------------------CREATE GAUGE----------------------------------------------------
 						
-						gaugeOptions_Temperature5Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Temperature5Day);
-						var gauge1 = new Highcharts.Chart(gaugeOptions_Temperature5Day);
-						gaugeOptions_Humidity5Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Humidity5Day);
-						var gauge2 = new Highcharts.Chart(gaugeOptions_Humidity5Day);
-						gaugeOptions_Pressure5Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Pressure5Day);
-						var gauge3 = new Highcharts.Chart(gaugeOptions_Pressure5Day);
-								
-
+						gaugeOptions_Temperature16Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Temperature16Day);
+						var gauge1 = new Highcharts.Chart(gaugeOptions_Temperature16Day);
+						gaugeOptions_Humidity16Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Humidity16Day);
+						var gauge2 = new Highcharts.Chart(gaugeOptions_Humidity16Day);
+						gaugeOptions_Pressure16Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Pressure16Day);
+						var gauge3 = new Highcharts.Chart(gaugeOptions_Pressure16Day);
+							
 		//----------------------------------CREATE CHARTS---------------------------------------------
 
-						var chart = new Highcharts.Chart(main_options5Day);
-						var chart_options_windSpeed = new Highcharts.Chart(options_windSpeed5Day);
-						var chart_graph_pressure = new Highcharts.Chart(options_pressure5Day);
-						var chart_options_sealevel = new Highcharts.Chart(options_sealevel5Day);
+						chart = new Highcharts.Chart(main_options16Day);
+						chart_options_windSpeed = new Highcharts.Chart(options_windSpeed16Day);
+						chart_graph_pressure = new Highcharts.Chart(options_pressure16Day);
+						
 						GLOBAL_options.actualChartContainer=[];
 						GLOBAL_options.actualChartContainer.push(chart);
 						GLOBAL_options.actualChartContainer.push(chart_options_windSpeed);
-						GLOBAL_options.	actualChartContainer.push(chart_graph_pressure);
-						GLOBAL_options.actualChartContainer.push(chart_options_sealevel);
-						GLOBAL_options.	actualChartContainer.push(gauge1);
+						GLOBAL_options.actualChartContainer.push(chart_graph_pressure);
+						GLOBAL_options.actualChartContainer.push(gauge1);
 						GLOBAL_options.actualChartContainer.push(gauge2);
 						GLOBAL_options.actualChartContainer.push(gauge3);
 					
 	round_corner();	
 }	
 /*	
-function destroy5DayCharts(){
+function destroy16DayCharts(){
 	$('container').highcharts().destroy();
 	$('graph_windSpeed').highcharts().destroy();
 	$('graph_pressure').highcharts().destroy();
-	$('graph_sealevel').highcharts().destroy();
 	$(this).attr('disable',true);
 }
 */

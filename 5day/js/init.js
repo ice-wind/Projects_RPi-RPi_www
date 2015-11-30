@@ -20,21 +20,35 @@
 		elementData.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
 		elementData.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
 			
-		elementData.prototype.getTemperaturPrivileged = function(){return Temperature};
+		elementData.prototype.getTemperature = function(){return Temperature};
 		elementData.prototype.getHumidity = function(){return Humidity};
 		elementData.prototype.getPressure = function(){return Pressure};
 		
+		elementData.prototype.getHumidityForGauge = function(){return Humidity[Humidity.length-1].y};
+		elementData.prototype.getPressureForGauge = function(){return Pressure[Pressure.length-1].y};
+		
 		elementData.prototype.variableFree = function(){
-			console.log(Temperature);
 			Temperature=[];
 			Humidity=[];
 			Pressure=[];
-			console.log("clear temp");
-			console.log(Temperature);
 		};
 		elementData.prototype.fillVariables = function(JSONdata){
+			console.log(!JSONdata[0].Temperature_eve);
+			var setMoreTemperatureIn16Day;
+			if(!JSONdata[0].Temperature_eve){
+				setMoreTemperatureIn16Day=false;
+			}else{
+				setMoreTemperatureIn16Day=true;
+			}
 			$.each(JSONdata,function(i,field){
-				Temperature.push({x:field.time,y:field.Temperature});
+				if(setMoreTemperatureIn16Day){
+					Temperature.push({x:field.time_night,y:field.Temperature_night});
+					Temperature.push({x:field.time_morning,y:field.Temperature_morning});
+					Temperature.push({x:field.time,y:field.Temperature});
+					Temperature.push({x:field.time_eve,y:field.Temperature_eve});
+				}else{
+					Temperature.push({x:field.time,y:field.Temperature});
+				}
 				Humidity.push({x:field.time,y:field.Humidity});
 				Pressure.push({x:field.time,y:field.Pressure});
 			});
@@ -51,9 +65,14 @@
 		var Grnd_level=[];
 		
 		prepare_RPiData.prototype.getTemperatureIn=function(){return TemperatureIn};
-		prepare_RPiData.prototype.TemperatureOut=function(){return TemperatureOut};
-		prepare_RPiData.prototype.Sea_level=function(){return Sea_level};
-		prepare_RPiData.prototype.Grnd_level=function(){return Grnd_level};
+		prepare_RPiData.prototype.getTemperatureOut=function(){return TemperatureOut};
+		prepare_RPiData.prototype.getSea_level=function(){return Sea_level};
+		prepare_RPiData.prototype.getGrnd_level=function(){return Grnd_level};
+		prepare_RPiData.prototype.getTemperatureInForGauge=function(){return TemperatureIn[TemperatureIn.length-1].y};
+		prepare_RPiData.prototype.getTemperatureOutForGauge=function(){return TemperatureOut[TemperatureOut.length-1].y};
+		prepare_RPiData.prototype.getSea_levelForGauge=function(){return Sea_level[Sea_level[Sea_level.length-1]].y};
+		prepare_RPiData.prototype.getGrnd_levelForGauge=function(){return Grnd_level[Grnd_level.length-1].y};
+		
 		
 		prepare_RPiData.prototype.variableFree = function(){
 			elementData.prototype.variableFree();
@@ -107,6 +126,10 @@
 			baseForecastData.prototype.getWeather_main = function(){return Weather_main};
 			baseForecastData.prototype.getWind_speed = function(){return Wind_speed};
 			baseForecastData.prototype.getWind_deg = function(){return Wind_deg};
+			
+			baseForecastData.prototype.getTemperatureNow = function(){return elementData.prototype.getTemperature()[0].y}
+			baseForecastData.prototype.getHumidityNow = function(){return elementData.prototype.getHumidity()[0].y}
+			baseForecastData.prototype.getPressureNow = function(){return elementData.prototype.getPressure()[0].y}
 			
 			baseForecastData.prototype.variableFree=function(){
 				elementData.prototype.variableFree();
@@ -169,14 +192,19 @@
 			Grnd_level=[];
 			Sea_level=[];
 		}
-	}
+	};
 	extend(prepare_data5Day,baseForecastData);
 	
 	var RPiData = new prepare_RPiData;
 	var data5Day = new prepare_data5Day;
 	var data16Day = new baseForecastData;
 	
-
+//global VARIABLE-----------------------------------------------------------------------------
+var prepareGlobal=function(){
+	this.actualChartContainer=[];
+	this.actualCitySelection="";
+}
+var GLOBAL_options = new prepareGlobal;
 //-----------------------------------FUNCTION SECTION--------------------------------------------------------------------------
 
 //-------------------------------round corner in gauge-----------------------------------------		
@@ -197,6 +225,7 @@ function round_corner(){
 			})
 		}
 }
+//-------------------------------end round corner----------------------------------------
 function getMenuSelection(){
 	return $('input[name="accordion"]:checked').val();
 }
@@ -222,7 +251,7 @@ function loadJSON5Day(callback){
 			// Fire the loading
 			head.appendChild(script);
 }*/
-//-------------------------------end round corner----------------------------------------
+
 //-----------------------------------FUNCTION SECTION END--------------------------------------------------------------------------
 //-------------------------------DOCUMENT READY SECTION----------------------------------------------------------------------------
 //------------------------------scroll to top--------------------------------------------
@@ -241,7 +270,7 @@ $(document).ready(function(){
       return false;
    });
    
-   //-------------------------------fade out search---------------------------------------------
+//-------------------------------fade out search---------------------------------------------
    $('#accordion input').on("change",function(){
 		var selected = getMenuSelection();
 		if(selected==='1')
@@ -253,6 +282,55 @@ $(document).ready(function(){
 		}
 	   
    });
-    
+//----------------------------------SELECT - UPDATE CHARTS-------------------------------------------
+var selectedButton=2;
+	
+	$('body').on('click','*',function(){
+		$("#livesearch").slideUp();
+	});
+	
+	$("form").submit(function(e){
+		e.preventDefault();
+	});
+	
+	$('#first').on('click',function(){
+		if(selectedButton!=1){
+			selectedButton=1;
+			console.log("handle first");
+			destroyAllCharts();
+			createRPiCharts();
+		}
+	});
+	$('#second').on('click',function(){
+		if(selectedButton!=2){
+			selectedButton=2;
+			console.log("handle second");
+			destroyAllCharts();
+			create5DayCharts();
+			getForecastData(GLOBAL_options.actualCitySelection);
+		}
+	});
+	$('#third').on('click',function(){
+		if(selectedButton!=3){
+			selectedButton=3;
+			console.log("handle third");
+			destroyAllCharts();
+			create16DayCharts();
+			getForecastData(GLOBAL_options.actualCitySelection);
+		}
+	});
+	
+	function destroyAllCharts(){
+		var numOfCharts = GLOBAL_options.actualChartContainer.length;
+		if(numOfCharts>0)
+		{
+			for(numOfCharts=numOfCharts-1;numOfCharts>=0;numOfCharts--){
+				GLOBAL_options.actualChartContainer[numOfCharts].destroy();
+				GLOBAL_options.actualChartContainer.pop();
+			}
+		}else{
+			console.log("there is no chart to erase!");
+		}
+	}
 });
 //-------------------------------DOCUMENT READY SECTION END------------------------------------------------------------------------

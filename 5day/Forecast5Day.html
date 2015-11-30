@@ -11,79 +11,10 @@
 	<script src="http://code.highcharts.com/modules/solid-gauge.js"></script>
 	<script type="text/javascript" src="js/init.js"></script>
 	<script type="text/javascript" src="js/5day.js"></script>
+	<script type="text/javascript" src="js/16day.js"></script>
+	<script type="text/javascript" src="js/RPi.js"></script>
 	<script type="text/javascript" src="js/search.js"></script>
-	<script type="text/javascript">
 	
-	
-	$(document).ready(function () {
-		
-		//----------------------------load data from JSON---------------------
-		console.log("start main:");
-		
-		loadJSON5Day(function(data){
-		console.log(data);
-		console.log(data5Day);
-			data5Day.fillVariables(data);
-			console.log("loaded");
-			createCharts();
-		});
-		
-		//---------------------------END load data---------------------------
-		console.log(data5Day);
-//------------------------------------DEFINITION MAIN TEMERATURE-------------------------------
-			main_options.series[0].data=data5Day.getTemperature;
-			main_options.series[1].data=data5Day.getHumidity;
-			main_options.series[2].data=data5Day.getRain;
-			main_options.series[3].data=data5Day.getSnow;
-			main_options.series[4].data=data5Day.getClouds;
-			
-//----------------------------------------DEFINITION CHART WIND--------------------------------		
-			options_windSpeed.series[0].data=data5Day.getWind_speed;
-			options_windSpeed.series[1].data=data5Day.getWind_deg;
-			options_windSpeed.series[1].dataLabels.formatter=function(){
-				var wind_deg=this.point.wind_deg;									
-				return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
-			};
-//----------------------------------------DEFINITION CHART PRESSURE--------------------------------			
-			options_pressure.series[0].data=data5Day.getPressure;
-			options_pressure.series[1].data=data5Day.getGrnd_level;
-//----------------------------------------DEFINITION CHART SEA LEVEL--------------------------------							
-			options_sealevel.series[0].data=data5Day.getSea_level;
-//---------------------------------------GAUGE OPTIONS--------------------------------------------------
-
-	gaugeOptions_Temperature.series=[{
-						name: 'Temp in',
-						data:[0],
-						dataLabels: {
-							useHTML: true,
-							format: '<img src="img/Hum.png" width="50px" align="center"><div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009933">{y}</span></div>'
-						}
-					}]
-	gaugeOptions_Sea_level.series= [{
-						name: 'Temp out',
-						data: [0],
-						dataLabels: {
-							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:purple">{y}</span></div>'
-						}
-					}]		
-	gaugeOptions_humidity.series= [{
-						name: 'Humidity',
-						data: [0],
-						dataLabels: {
-						
-							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009ce8">{y}</span></div>'
-						}
-					}]
-	gaugeOptions_pressure.series= [{
-						name: 'Pressure',
-						data: [0],
-						dataLabels: {
-							format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:orange">{y}</span></div>'
-						}
-					}]
-	});
-	</script>
-
 </head>
 <body>
 Start
@@ -108,20 +39,21 @@ Start
 	</ul>
 	<div class="base_class">
 		<form autocomplete="on" id="search" >
-			<input class="search" type="search" size="30"  onkeyup="handle_key(event);" data-search="" autofocus placeholder="Search..." >
+			<input class="search" type="search" size="30"  onkeyup="handle_pressKeyboard(event);" data-search="" autofocus placeholder="Search..." >
 			<div id="livesearch"></div>
 			<div class="result"></div>
 		</form>
 	</div>
 	
-	<div id='container'>h</div>
-	<div id='graph_windSpeed'>h</div>
-	<div id='2graph_pressure'>h</div>
-	<div id='3graph_sealevel'>h</div>
+	<div id='container'></div>
+	<div id='graph_windSpeed'></div>
+	<div id='graph_pressure'></div>
+	<div id='graph_sealevel'></div>
 	
 	<div id='1gauge'></div>
 	<div id='2gauge'></div>
 	<div id='3gauge'></div>
 	<div id='4gauge'></div>
+	
 </body>
 </html>
