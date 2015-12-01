@@ -126,8 +126,12 @@
 						temp_picture_url = '<img src="img/Temperature.png" title="" alt="" border="1" height="25" width="22" align="center">';
 						hum_picture_url = '<img src="img/Humidity.png" title="" alt="" border="1" height="25" width="22" align="center">';
 						press_picture_url = '<img src="img/Pressure.png" title="" alt="" border="1" height="25" width="22" align="center">';
+						if(!this.point.w_desc)
+							{situation='';}
+						else
+							{situation='Situation: <b>'+this.point.w_desc+'</b>';}
 					if(this.series.name == "Temp"){
-										description = '<div class="situation">Situation: <b>'+this.point.w_desc+'</b></div>';
+										description = '<div class="situation">'+situation+'</div>';
 						tooltip_all = 	['<div class="tooltip">'+Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>'+
 										description+'<br /><table  style="font-size: 90%"><tr><td>'+temp_picture_url+'Temperature</td><td>'+Highcharts.numberFormat(this.y, 2)+'</td></tr>'+
 										'<tr><td>'+hum_picture_url+'Humidity</td><td>'+Highcharts.numberFormat(this.point.humidity, 2)+'</td></tr>'+

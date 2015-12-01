@@ -16,7 +16,7 @@
 		var Humidity=[];
 		var Pressure=[];
 		
-		elementData.prototype.setTemperature = function(myTemperature){Temperature.push(myTemperature)};
+		elementData.prototype.setTemperature = function(myTemperature){Temperature=[];Temperature.push(myTemperature)};
 		elementData.prototype.setHumidity = function(myHumidity){Humidity.push(myHumidity)};
 		elementData.prototype.setPressure = function(myPressure){Pressure.push(myPressure)};
 			
@@ -33,7 +33,7 @@
 			Pressure=[];
 		};
 		elementData.prototype.fillVariables = function(JSONdata){
-			console.log(!JSONdata[0].Temperature_eve);
+			//console.log(!JSONdata[0].Temperature_eve);
 			var setMoreTemperatureIn16Day;
 			if(!JSONdata[0].Temperature_eve){
 				setMoreTemperatureIn16Day=false;
@@ -44,10 +44,10 @@
 				if(setMoreTemperatureIn16Day){
 					Temperature.push({x:field.time_night,y:field.Temperature_night});
 					Temperature.push({x:field.time_morning,y:field.Temperature_morning});
-					Temperature.push({x:field.time,y:field.Temperature});
+					Temperature.push({x:field.time,y:field.Temperature,humidity:field.Humidity,pressure:field.Pressure});
 					Temperature.push({x:field.time_eve,y:field.Temperature_eve});
 				}else{
-					Temperature.push({x:field.time,y:field.Temperature});
+					Temperature.push({x:field.time,y:field.Temperature,humidity:field.Humidity,pressure:field.Pressure});
 				}
 				Humidity.push({x:field.time,y:field.Humidity});
 				Pressure.push({x:field.time,y:field.Pressure});
@@ -144,7 +144,6 @@
 				Wind_deg=[];
 			};
 			baseForecastData.prototype.fillVariables = function(JSONdatas){
-				console.log("sv");
 				elementData.prototype.fillVariables(JSONdatas);
 				
 				$.each(JSONdatas,function(i,field){

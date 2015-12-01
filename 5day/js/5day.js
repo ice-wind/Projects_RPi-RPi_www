@@ -20,7 +20,7 @@ Highcharts.setOptions({
 				if(this.series.name == "Hum"){
 					picture_url = '<img src="img/Hum.png" title="" alt="" border="1" height="25" width="22" align="center">';
 				}else
-				if(this.series.name = "Temp Out"){
+				if(this.series.name == "Temp Out"){
 					picture_url = '<img src="img/Press.png" title="" alt="" border="1" height="25" width="22" align="center">';
 					}
 				else
@@ -216,6 +216,7 @@ Highcharts.setOptions({
 					formatter:function(){
 						 return '<span>'+this.point.w_icon+'</span><br/><br />';
 						//return '<img src="http://highcharts.com/demo/gfx/sun.png"><img>&nbsp;';
+						//return '<img src="img/'+this.point.w_icon+.png+'"><img>&nbsp;';
 					}
 				},
 				color: '#FF3D8B',

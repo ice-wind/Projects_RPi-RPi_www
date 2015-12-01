@@ -1,0 +1,108 @@
+.scrollToTop{
+   width:40px;
+   height: 40px;  
+   background-image: url('../img/arrow.png');
+   position:fixed;
+   right:30px;
+   bottom:30px;
+   display:none;
+   z-index:200;
+   opacity:0.2;
+}
+.scrollToTop:hover{
+	opacity:1;
+}
+#accordion {
+   margin:100px auto;
+   padding:0;
+   width:500px;
+ 
+   }   
+ 
+#accordion li {
+   list-style:none;
+   width:100%;
+   }   
+ 
+#accordion  li label {
+   padding:10px;
+   display:block;
+ 
+   font-family: 'Bree Serif', 'serif';
+   font-size:30px;
+   line-height:30px;
+   color:#FFFFFF;
+ 
+   background-color:#3498db;
+   border-bottom: solid 8px #2980b9;
+   }   
+ 
+/* Hide the radio buttons */
+#accordion label + input[type='radio'] {
+     display: none;
+}   
+ 
+/* hide content by default */
+#accordion .content {
+    display:none;
+ 
+   padding:10px;
+   font-family:Constantia, "Lucida Bright", "DejaVu Serif", Georgia, serif;
+   font-size:19px;
+   line-height:26px;
+ 
+   background-color:#2ecc71;
+}
+ 
+/* Show content boxes when the radio buttons are checked */
+#accordion label + input[type='radio']:checked + .content {
+   display:block;
+}
+
+table{
+	border-collapse: collapse;
+	width:100%;
+	align:center;
+}
+.td{
+	min-width:60px;					
+}
+.th{
+	
+}
+.table, td, tr {
+	border:2px solid #CBCBCB;	
+	border-collapse: collapse;
+	align:center;
+	width:100%;
+}
+
+
+.label {
+ z-index: 1 ;
+ }
+
+.highcharts-tooltip span {
+	background-color:white;
+	border:1px solid green;
+	opacity:0.9;
+	z-index:99 ;
+	white-space:normal;
+	width:auto;
+	min-width:200px;
+	height:auto;
+	overflow:auto;
+	align:center;
+}
+
+.tooltip {
+	padding:5px;
+}
+.situation{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 18px;
+	
+}
+.search{
+	
+}
