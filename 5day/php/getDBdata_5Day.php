@@ -28,7 +28,7 @@ if (mysqli_connect_errno($conn))
 	
     while($select_city->fetch())
     {        
-        $point = array("time"=>(1000*(strtotime($DT_TXT))) , "Temperature"=>$TEMPERATURE , "Humidity"=>$HUMIDITY,"Pressure"=>$PRESSURE,"Sea_level"=>$SEA_LEVEL,"Grnd_level"=>$GRND_LEVEL,"Clouds"=>$CLOUDS_ALL,"Rain"=>$RAIN,"Snow"=>$SNOW,"Weather_description"=>$WEATHER_DESCRIPTION,"Weather_icon"=>$WEATHER_ICON,"Icon_id"=>$ICON_ID,"Weather_main"=>$WEATHER_MAIN,"Wind_deg"=>$WIND_DEG,"Wind_speed"=>$WIND_SPEED);//,"Snow"=>$row['SNOW'],"Weather_id"=>$row['WEATHER_ID']convert from milisecond
+        $point = array("time"=>((1000*(strtotime($DT_TXT)+28800))) , "Temperature"=>$TEMPERATURE , "Humidity"=>$HUMIDITY,"Pressure"=>$PRESSURE,"Sea_level"=>$SEA_LEVEL,"Grnd_level"=>$GRND_LEVEL,"Clouds"=>$CLOUDS_ALL,"Rain"=>$RAIN,"Snow"=>$SNOW,"Weather_description"=>$WEATHER_DESCRIPTION,"Weather_icon"=>$WEATHER_ICON,"Icon_id"=>$ICON_ID,"Weather_main"=>$WEATHER_MAIN,"Wind_deg"=>$WIND_DEG,"Wind_speed"=>$WIND_SPEED);//,"Snow"=>$row['SNOW'],"Weather_id"=>$row['WEATHER_ID']convert from milisecond
         
 	array_push($data_points, $point);        
     }

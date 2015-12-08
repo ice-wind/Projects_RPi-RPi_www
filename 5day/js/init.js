@@ -127,9 +127,11 @@
 			baseForecastData.prototype.getWind_speed = function(){return Wind_speed};
 			baseForecastData.prototype.getWind_deg = function(){return Wind_deg};
 			
-			baseForecastData.prototype.getTemperatureNow = function(){return elementData.prototype.getTemperature()[0].y}
-			baseForecastData.prototype.getHumidityNow = function(){return elementData.prototype.getHumidity()[0].y}
-			baseForecastData.prototype.getPressureNow = function(){return elementData.prototype.getPressure()[0].y}
+			baseForecastData.prototype.getTemperatureNow = function(){return elementData.prototype.getTemperature()[0].y};
+			baseForecastData.prototype.getHumidityNow = function(){return elementData.prototype.getHumidity()[0].y};
+			baseForecastData.prototype.getPressureNow = function(){return elementData.prototype.getPressure()[0].y};
+			baseForecastData.prototype.getRainNow = function(){return elementData.prototype.getRain()[0].y};
+			baseForecastData.prototype.getSnowNow = function(){return elementData.prototype.getSnow()[0].y};
 			
 			baseForecastData.prototype.variableFree=function(){
 				elementData.prototype.variableFree();
@@ -295,16 +297,16 @@ var selectedButton=2;
 	$('#first').on('click',function(){
 		if(selectedButton!=1){
 			selectedButton=1;
-			console.log("handle first");
 			destroyAllCharts();
+			deleteUnusedDIV();
 			createRPiCharts();
 		}
 	});
 	$('#second').on('click',function(){
 		if(selectedButton!=2){
 			selectedButton=2;
-			console.log("handle second");
 			destroyAllCharts();
+			deleteUnusedDIV();
 			create5DayCharts();
 			getForecastData(GLOBAL_options.actualCitySelection);
 		}
@@ -312,12 +314,28 @@ var selectedButton=2;
 	$('#third').on('click',function(){
 		if(selectedButton!=3){
 			selectedButton=3;
-			console.log("handle third");
 			destroyAllCharts();
+			deleteUnusedDIV();
 			create16DayCharts();
 			getForecastData(GLOBAL_options.actualCitySelection);
 		}
 	});
+	
+	function deleteUnusedDIV(){
+		if(selectedButton==1){
+			$("#graph_windSpeed").addClass('hide');
+			$("#graph_sealevel").removeClass('hide');
+			console.log("selected first");
+		}else
+		if(selectedButton==2){
+			$("#graph_windSpeed").removeClass('hide');
+			$("#graph_sealevel").removeClass('hide');
+			
+		}else{
+			$("#graph_sealevel").addClass('hide');
+			$("#graph_windSpeed").removeClass('hide');
+		}
+	}
 	
 	function destroyAllCharts(){
 		var numOfCharts = GLOBAL_options.actualChartContainer.length;

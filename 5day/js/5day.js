@@ -106,7 +106,7 @@ Highcharts.setOptions({
 						}
 				},
 				opposite: true,
-				},{//Fourth
+			},{//Fourth
 				min: 0,
 				gridLineWidth: 1,
 				TickInterval: 'auto',
@@ -143,7 +143,7 @@ Highcharts.setOptions({
 					},
 				}
 
-				},{//clouds
+			},{//clouds
 				gridLineWidth:2,
 				title:{
 					y:10,
@@ -161,8 +161,10 @@ Highcharts.setOptions({
 				max:100,
 				tickInterval: 50,
 				offset: 0,
-				top:-80,
+				height:100,
+				top:-10,
 				opposite: false,
+	
 			}],
 			
 			tooltip:{
@@ -214,9 +216,13 @@ Highcharts.setOptions({
 					enabled:true,
 					useHTML:true,
 					formatter:function(){
-						 return '<span>'+this.point.w_icon+'</span><br/><br />';
-						//return '<img src="http://highcharts.com/demo/gfx/sun.png"><img>&nbsp;';
-						//return '<img src="img/'+this.point.w_icon+.png+'"><img>&nbsp;';
+						var weather_icon=this.point.w_icon;
+						if(!weather_icon){
+							return "";							
+						}
+						else{
+							return '<span>'+weather_icon+'</span><img src="img/'+this.point.w_icon+'.png"'+'width="42"><img>&nbsp;';
+						}
 					}
 				},
 				color: '#FF3D8B',
@@ -488,7 +494,7 @@ var options_windSpeed5Day = {
 			dataLabels:{
 					enabled:true,
 					useHTML:true,
-					y:245,
+					y:550,
 					formatter:function(){
 						var wind_deg=this.point.wind_deg;				
 						return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
@@ -617,7 +623,7 @@ var defaultGaugeOptions = {
 		title: null,
 		yAxis: {
 			min: 0,
-			max: 30,
+			max: 50,
 			minColor: '#009CE8',
 			maxColor: '#009CE8',
 			lineWidth: 0,
@@ -663,7 +669,7 @@ var defaultGaugeOptions = {
 							},
 							yAxis: {
 								min: 0,
-								max: 2000,
+								max: 60,
 								minColor: '#99D6AD',
 								maxColor: '#005C1F',
 								title: {
@@ -683,7 +689,7 @@ var defaultGaugeOptions = {
 								data:[0],
 								dataLabels: {
 									useHTML: true,
-									format: '<img src="img/Hum.png" width="50px" align="center"><div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009933">{y}</span></div>'
+									format: '<img src="img/Hum.png" width="50px" align="center"><div style="text-align:center"><span style="font-size:20px;color:#009933">{y}</span></div>'
 								}
 							}],
 							credits: {
@@ -709,7 +715,7 @@ var defaultGaugeOptions = {
 								data: [0],
 								dataLabels: {
 								
-									format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009ce8">{y}</span></div>'
+									format: '<div style="text-align:center"><span style="font-size:20px;color:#009ce8">{y}</span></div>'
 								}
 							}],
 							credits: {
@@ -741,7 +747,39 @@ var defaultGaugeOptions = {
 								name: 'Pressure',
 								data: [0],
 								dataLabels: {
-									format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:orange">{y}</span></div>'
+									format: '<div style="text-align:center"><span style="font-size:20px;color:orange">{y}</span></div>'
+								}
+							}],
+							credits: {
+								enabled: false
+							}
+					}
+					var gaugeOptions_Rain_Snow5Day = {
+							chart: {
+								renderTo: '4gauge'
+							},
+							yAxis: {
+								min: 0,
+								max: 10,
+								minColor: '#99D6AD',
+								maxColor: '#005C1F',
+								title: {
+									text: 'Rain/Snow'
+								}
+							},
+							plotOptions:{
+								solidgauge:{
+									borderColor:'blue'
+								}
+							},
+							tooltip:{
+								enabled:false
+							},
+							series: [{
+								name: 'Rain/Snow',
+								data: [0],
+								dataLabels: {
+									format: '<div style="text-align:center"><span style="font-size:20px;color:orange">{y}</span></div>'
 								}
 							}],
 							credits: {
@@ -751,6 +789,9 @@ var defaultGaugeOptions = {
 					
 //--------------------------end of gauge options------------------------------------
 function create5DayCharts(){
+	
+						
+	
 		//--------------------------------------CREATE GAUGE----------------------------------------------------
 						
 						gaugeOptions_Temperature5Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Temperature5Day);
@@ -759,6 +800,8 @@ function create5DayCharts(){
 						var gauge2 = new Highcharts.Chart(gaugeOptions_Humidity5Day);
 						gaugeOptions_Pressure5Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Pressure5Day);
 						var gauge3 = new Highcharts.Chart(gaugeOptions_Pressure5Day);
+						gaugeOptions_Rain_Snow5Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Rain_Snow5Day);
+						var gauge4 = new Highcharts.Chart(gaugeOptions_Rain_Snow5Day);
 								
 
 		//----------------------------------CREATE CHARTS---------------------------------------------
@@ -770,11 +813,12 @@ function create5DayCharts(){
 						GLOBAL_options.actualChartContainer=[];
 						GLOBAL_options.actualChartContainer.push(chart);
 						GLOBAL_options.actualChartContainer.push(chart_options_windSpeed);
-						GLOBAL_options.	actualChartContainer.push(chart_graph_pressure);
+						GLOBAL_options.actualChartContainer.push(chart_graph_pressure);
 						GLOBAL_options.actualChartContainer.push(chart_options_sealevel);
-						GLOBAL_options.	actualChartContainer.push(gauge1);
+						GLOBAL_options.actualChartContainer.push(gauge1);
 						GLOBAL_options.actualChartContainer.push(gauge2);
 						GLOBAL_options.actualChartContainer.push(gauge3);
+						GLOBAL_options.actualChartContainer.push(gauge4);
 					
 	round_corner();	
 }	

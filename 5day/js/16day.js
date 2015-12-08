@@ -112,7 +112,8 @@
 				max:100,
 				tickInterval: 50,
 				offset: 0,
-				top:-80,
+				height:100,
+				top:-10,
 				opposite: false,
 			}],
 			
@@ -169,7 +170,14 @@
 					enabled:true,
 					useHTML:true,
 					formatter:function(){
-						 return '<span>'+this.point.w_icon+'</span><br/><br />';
+						var weather_icon=this.point.w_icon;
+						if(!weather_icon){
+							return "";							
+						}
+						else{
+							return '<span>'+weather_icon+'</span><img src="img/'+this.point.w_icon+'.png"'+'width="42"><img>&nbsp;';
+						}
+						//return '<span>'+this.point.w_icon+'</span><br/><br />';
 						//return '<img src="http://highcharts.com/demo/gfx/sun.png"><img>&nbsp;';
 					}
 				},
@@ -442,7 +450,7 @@ var options_windSpeed16Day = {
 			dataLabels:{
 					enabled:true,
 					useHTML:true,
-					y:245,
+					y:550,
 					formatter:function(){
 						var wind_deg=this.point.wind_deg;				
 						return '<img src="img/wind_arrow.png" width="20px" height="20px" style= " float:left; transform: rotate('+wind_deg+'deg) scale(1);-ms-transform: rotate('+wind_deg+'deg) scale(1); -webkit-transform:rotate('+wind_deg+'deg) scale(1);" />';
@@ -507,7 +515,7 @@ var defaultGaugeOptions16Day = {
 		title: null,
 		yAxis: {
 			min: 0,
-			max: 30,
+			max: 60,
 			minColor: '#009CE8',
 			maxColor: '#009CE8',
 			lineWidth: 0,
@@ -553,7 +561,7 @@ var defaultGaugeOptions16Day = {
 							},
 							yAxis: {
 								min: 0,
-								max: 2000,
+								max: 60,
 								minColor: '#99D6AD',
 								maxColor: '#005C1F',
 								title: {
@@ -573,7 +581,7 @@ var defaultGaugeOptions16Day = {
 								data:[0],
 								dataLabels: {
 									useHTML: true,
-									format: '<img src="img/Hum.png" width="50px" align="center"><div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009933">{y}</span></div>'
+									format: '<div style="text-align:center"><span style="font-size:20px;color:#009933">{y}</span></div>'
 								}
 							}],
 							credits: {
@@ -598,8 +606,7 @@ var defaultGaugeOptions16Day = {
 								name: 'Humidity',
 								data: [0],
 								dataLabels: {
-								
-									format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:#009ce8">{y}</span></div>'
+									format: '<div style="text-align:center"><span style="font-size:20px;color:#009ce8">{y}</span></div>'
 								}
 							}],
 							credits: {
@@ -612,7 +619,7 @@ var defaultGaugeOptions16Day = {
 							},
 							yAxis: {
 								min: 0,
-								max: 50000,
+								max: 2000,
 								title: {
 									text: 'Pressure'
 								}
@@ -629,13 +636,45 @@ var defaultGaugeOptions16Day = {
 								name: 'Pressure',
 								data: [0],
 								dataLabels: {
-									format: '<div style="Width: 50px;text-align:center"><span style="font-size:30px;color:orange">{y}</span></div>'
+									format: '<div style="text-align:center"><span style="font-size:20px;color:orange">{y}</span></div>'
 								}
 							}],
 							credits: {
 								enabled: false
 							},
 							
+					}
+					var gaugeOptions_Rain_Snow16Day = {
+							chart: {
+								renderTo: '4gauge'
+							},
+							yAxis: {
+								min: 0,
+								max: 10,
+								minColor: '#99D6AD',
+								maxColor: '#005C1F',
+								title: {
+									text: 'Rain/Snow'
+								}
+							},
+							plotOptions:{
+								solidgauge:{
+									borderColor:'blue'
+								}
+							},
+							tooltip:{
+								enabled:false
+							},
+							series: [{
+								name: 'Rain/Snow',
+								data: [0],
+								dataLabels: {
+									format: '<div style="text-align:center"><span style="font-size:20px;color:orange">{y}</span></div>'
+								}
+							}],
+							credits: {
+								enabled: false
+							}
 					}
 //--------------------------end of gauge options------------------------------------
 function create16DayCharts(){
@@ -647,6 +686,8 @@ function create16DayCharts(){
 						var gauge2 = new Highcharts.Chart(gaugeOptions_Humidity16Day);
 						gaugeOptions_Pressure16Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Pressure16Day);
 						var gauge3 = new Highcharts.Chart(gaugeOptions_Pressure16Day);
+						gaugeOptions_Rain_Snow16Day = jQuery.extend(true,[],defaultGaugeOptions,gaugeOptions_Rain_Snow16Day);
+						var gauge4 = new Highcharts.Chart(gaugeOptions_Rain_Snow16Day);
 							
 		//----------------------------------CREATE CHARTS---------------------------------------------
 
@@ -661,6 +702,7 @@ function create16DayCharts(){
 						GLOBAL_options.actualChartContainer.push(gauge1);
 						GLOBAL_options.actualChartContainer.push(gauge2);
 						GLOBAL_options.actualChartContainer.push(gauge3);
+						GLOBAL_options.actualChartContainer.push(gauge4);
 					
 	round_corner();	
 }	

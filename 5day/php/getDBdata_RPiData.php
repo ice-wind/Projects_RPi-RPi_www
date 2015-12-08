@@ -26,7 +26,7 @@ if (mysqli_connect_errno($conn))
 	
     while($select_city->fetch())
     {        
-        $point = array("time"=>strtotime($TIME) , "TemperatureIn"=>$TEMPERATURE,"TemperatureOut"=>$TEMPERATURE_BMP , "Humidity"=>$HUMIDITY,"Pressure"=>$PRESSURE,"Grnd_level"=>$ALTITUDE,"Sea_level"=>$SEALEVEL);
+        $point = array("time"=>(strtotime($TIME))*1000 , "TemperatureIn"=>$TEMPERATURE,"TemperatureOut"=>$TEMPERATURE_BMP , "Humidity"=>$HUMIDITY,"Pressure"=>$PRESSURE,"Grnd_level"=>$ALTITUDE,"Sea_level"=>$SEALEVEL);
         
 	array_push($data_points, $point);        
     }

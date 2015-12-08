@@ -97,8 +97,6 @@ function mergeObjects(obj1,obj2,obj3){
 	var j=0;
 		for (var i=0;i<obj1.length;i++)
 		{
-			//console.log(obj3);
-			//console.log(obj1[i].x+"=="+obj2[j].x);
 			if(j==obj2.length-1)j=0;
 			if(+obj1[i].x===+obj2[j].x)
 			{	
@@ -108,10 +106,9 @@ function mergeObjects(obj1,obj2,obj3){
 			else
 			{
 				objRET[i]=({x:obj1[i].x,y:obj1[i].y,humidity:obj1[i].humidity,pressure:obj1[i].pressure,w_desc:"",w_icon:""});
-			}
-			
+			}	
 		}
-	//console.log(objRET);
+	console.log(objRET);
 	return objRET;
 }
 			
@@ -123,8 +120,9 @@ function update5DayCharts(response){
 		create5DayCharts();
 		var container = $('#container').highcharts();
 	}
-
-	container.series[0].setData(mergeObjects(data5Day.getTemperature(),data5Day.getWeather_description(),data5Day.getIcon_id())); //need to merge for tooltip
+	console.log(data5Day.getWeather_icon());
+	console.log(data5Day.getTemperature());
+	container.series[0].setData(mergeObjects(data5Day.getTemperature(),data5Day.getWeather_description(),data5Day.getWeather_icon())); //need to merge for tooltip
 	container.series[1].setData(data5Day.getHumidity());
 	container.series[2].setData(data5Day.getRain());
 	container.series[3].setData(data5Day.getSnow());
@@ -134,7 +132,7 @@ function update5DayCharts(response){
 	var wind = $('#graph_windSpeed').highcharts();
 	wind.series[0].setData(data5Day.getWind_speed());
 	wind.series[1].setData(data5Day.getWind_deg());
-	//console.log(data5Day.getWind_deg());
+
 	var pressure = $('#graph_pressure').highcharts();
 	pressure.series[0].setData(data5Day.getPressure());
 	pressure.series[1].setData(data5Day.getGrnd_level());
@@ -149,6 +147,8 @@ function update5DayCharts(response){
 	gauge2.series[0].points[0].update(data5Day.getHumidityNow());
 	var gauge3 = $('#3gauge').highcharts();
 	gauge3.series[0].points[0].update(data5Day.getPressureNow());
+	var gauge4 = $('#4gauge').highcharts();
+	gauge4.series[0].points[0].update(data5Day.getRain()+data5Day.getSnow());
 }
 function update16DayCharts(response){
 	data16Day.variableFree();
@@ -156,9 +156,10 @@ function update16DayCharts(response){
 	
 	var container = $('#container').highcharts();
 	
-	console.log(data16Day.getWeather_description());
+	console.log(data16Day.getWeather_icon());
 	console.log(data16Day.getTemperature());
-	container.series[0].setData(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data5Day.getIcon_id()));
+	console.log(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data5Day.getWeather_icon()));
+	container.series[0].setData(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data5Day.getWeather_icon()));
 	container.series[1].setData(data16Day.getHumidity());
 	container.series[2].setData(data16Day.getRain());
 	container.series[3].setData(data16Day.getSnow());
@@ -186,7 +187,7 @@ function showSearchSugestionResult(){
 	var searchBox = document.getElementsByClassName("search")[0];
 	
 	var str = $(".search").val();
-	//console.log(str);
+
 	if(str!=null){
 		$.ajax({
 			type: 	"GET",
