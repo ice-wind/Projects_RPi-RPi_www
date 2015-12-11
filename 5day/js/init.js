@@ -349,5 +349,8 @@ var selectedButton=2;
 			console.log("there is no chart to erase!");
 		}
 	}
+	$('.left_top').on('click',function(){
+		location.reload(true); //force reload
+	});
 });
 //-------------------------------DOCUMENT READY SECTION END------------------------------------------------------------------------
