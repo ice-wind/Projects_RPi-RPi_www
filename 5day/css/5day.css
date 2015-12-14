@@ -218,13 +218,22 @@
 	padding-top:25;
 }
 
-.right_left_sideMenu{
+.blank{
+	background:grey;
+	margin:auto;
+}
+.language{
 	float:right;
-	padding-left:15;
-	padding-right:15;
+	padding:15px;
 	border-left: 1px silver solid;
 	margin-left:auto;
-	width:40px;
+	width:50px;
+}
+.right_left_sideMenu{
+	float:right;
+	padding-left:15px;
+	border-left: 1px silver solid;
+	width:50px;
 }
 .gadgets_set{
 	display: -webkit-flex;
@@ -305,39 +314,39 @@
 	border-top: solid 1px #000;
 	border-bottom: solid 1px #000;
 	cursor: pointer;
+	
+	overflow: hidden;
+	white-space: nowrap; 
    
-   -moz-transition: all .2s ease-in;
-    -o-transition: all .2s ease-in;
-    -webkit-transition: all .2s ease-in;
-	transition: all .2s ease-in;
+  
    } 
- 
-#accordion  li label:hover{
-	will-change:transform,background-color,width;
-	color:#ECEFF1;
-}
-#accordion  li label:active{
-	
-	-webkit-animation: mymove 0.1s 1 ; /* Chrome, Safari, Opera */
-    animation: mymove 0.1s 1 ;
-	-webkit-animation-fill-mode: forward ; /* Chrome, Safari, Opera */
-    animation-fill-mode:forward ;
-	
-}
-	@-webkit-keyframes mymove {
-		0% {background-color: #536c79;width:0%;}
-		100% {background-color: #039BE5;width:100%;}
-	}
-	@keyframes mymove {
-		0% {background-color: #536c79;width:0%;}
-		100% {background-color: #039BE5;width:100%;}
-	}
 
 #accordion input[type='radio']:checked + label {
 	color:#ECEFF1;
 	background-color:#039BE5;/*grey 252525*/
 	
+	-webkit-animation: myan 0.65s linear;
+	-moz-animation: myan 0.65s linear;
+	-ms-animation: myan 0.65s linear;
+	-o-animation: myan 0.65s linear;
+	animation: myan 0.65s linear;
 }
+	@-webkit-keyframes myan {  
+		0% {background-color:#039BE5;opacity:0;}
+		100% {background-color:#039BE5;color:#ECEFF1;opacity:1;}
+	}
+	@-moz-keyframes myan {  
+		0% {background-color:#039BE5;opacity:0;}
+		100% {background-color:#039BE5;color:#ECEFF1;opacity:1;}
+	}
+	@-o-keyframes myan {  
+		0% {background-color:#039BE5;opacity:0;}
+		100% {background-color:#039BE5;color:#ECEFF1;opacity:1;}
+	}
+	@keyframes myan {  
+		0% {background-color:#039BE5;opacity:0;}
+		100% {background-color:#039BE5;color:#ECEFF1;opacity:1;}
+	}
 /* Hide the radio buttons */
 #accordion li input[type='radio'] {
      display: none;
@@ -406,4 +415,64 @@ table{
 	-webkit-flex-direction: column;
 	flex-direction: column;
   }
+}
+/*------------------------Click effect----------------------------*/
+.ink {
+  display: block;
+  position: absolute;
+  background: rgba(240, 249, 255, 0.3);
+  border-radius: 100%;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -o-transform: scale(0);
+  transform: scale(0);
+}
+.animate {
+  -webkit-animation: ripple 0.65s linear;
+  -moz-animation: ripple 0.65s linear;
+  -ms-animation: ripple 0.65s linear;
+  -o-animation: ripple 0.65s linear;
+  animation: ripple 0.65s linear;
+}
+	@-webkit-keyframes ripple {  
+		100% {
+		opacity: 0;
+		-webkit-transform: scale(2.5);
+		}
+	}
+	@-moz-keyframes ripple {  
+		100% {
+		opacity: 0;
+		-moz-transform: scale(2.5);
+		}
+	}
+	@-o-keyframes ripple {  
+		100% {
+		opacity: 0;
+		-o-transform: scale(2.5);
+		}
+	}
+	@keyframes ripple {  
+		100% {
+		opacity: 0;
+		transform: scale(2.5);
+		}
+	}
+.ripplelink {
+  
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  z-index: 0;
+}
+.ripplelink:hover {
+  z-index: 1000;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+  -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 16px 16px 0;
 }
