@@ -374,6 +374,30 @@ var selectedButton=2;
 });
 
 //---------------------------------------------------------
+//---------------------------side menu anim------------------	
+	$(".sideMenu_button").hover(function(){
+		$(".side_menu_button_content").addClass("side_menu_animation");
+	},function(){
+		$(".side_menu_button_content").removeClass("side_menu_animation");
+	});
+//--------------------------------------------------------------
+	/*
+	var side_menu_selected=false;
+	$(".sideMenu_button").on('click',function(){
+		if(!side_menu_selected){
+			side_menu_selected=true;
+			$(".side_menu_area").css("display","block");
+		}else{
+			side_menu_selected=false;
+			$(".side_menu_area").css("display","none");
+		}
+		
+	});
+	*/
+	$(".sideMenu_button").on('click',function(){
+		 $(".side_menu_area").fadeToggle("slow");
+	});
+	
 	
 });
 //-------------------------------DOCUMENT READY SECTION END------------------------------------------------------------------------

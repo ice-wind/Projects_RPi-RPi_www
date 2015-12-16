@@ -28,7 +28,7 @@ Start
 				<ul id="accordion">
 					<li>
 						<input type="radio" name="accordion" value="1" id="first" >
-						<label for="first" class="ripplelink"><img src="img/RPi_ink.pngs"style="width:30;height:25;">Home sensors</label>
+						<label for="first" class="ripplelink"><img src="img/RPi_home.ico"style="width:60;height:45;padding-left:5pxl"> Home sensors</label>
 					</li>
 					<li>
 						<input type="radio" name="accordion" value="2" id="second" checked>
@@ -59,23 +59,28 @@ Start
 					</div>
 					<div class="blank"></div>
 					<div class="language"><img src="img/EN.png" style="width:20;height:15;">EN</div>
-					<div class="right_left_sideMenu">menu_icon</div>
+					<div class="sideMenu_button"><div class="side_menu_button_content"></div></div>
 				</div>
-				<div class="gadgets_set">
-					<div id='1gauge' class="dash_components gadget1"></div>
-					<div id='2gauge' class="dash_components gadget2"></div>
-					<div id='3gauge' class="dash_components gadget3"></div>
-					<div id='4gauge' class="dash_components gadget4"></div>
-				</div>
-				<div class= "graphs_set">
-					<div  id='container' class = "dash_components graphs graph1"> 
+				<div class="main_row_container">
+					<div class="main_graphs_section_column">
+						<div class="gadgets_set">
+							<div id='1gauge' class="dash_components gadget1"></div>
+							<div id='2gauge' class="dash_components gadget2"></div>
+							<div id='3gauge' class="dash_components gadget3"></div>
+							<div id='4gauge' class="dash_components gadget4"></div>
+						</div>
+						<div class= "graphs_set">
+						<div  id='container' class = "dash_components graphs graph1"> 
+						</div>
+						<div id='graph_windSpeed' class = "dash_components graphs graph2"> 
+						</div>
+						<div id='graph_pressure' class = "dash_components graphs graph3"> 
+						</div>
+						<div id='graph_sealevel' class = "dash_components graphs graph4 "> 
+						</div>
+						</div>
 					</div>
-					<div id='graph_windSpeed' class = "dash_components graphs graph2"> 
-					</div>
-					<div id='graph_pressure' class = "dash_components graphs graph3"> 
-					</div>
-					<div id='graph_sealevel' class = "dash_components graphs graph4 "> 
-					</div>
+					<div class="side_menu_area">srfg</div>
 				</div>
 			</div>
 		</div>
