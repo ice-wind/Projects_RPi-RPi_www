@@ -33,7 +33,8 @@
 			Pressure=[];
 		};
 		elementData.prototype.fillVariables = function(JSONdata){
-			//console.log(!JSONdata[0].Temperature_eve);
+			console.log(JSONdata);
+			console.log(JSONdata[0].Temperature_eve);
 			var setMoreTemperatureIn16Day;
 			if(!JSONdata[0].Temperature_eve){
 				setMoreTemperatureIn16Day=false;
@@ -130,8 +131,8 @@
 			baseForecastData.prototype.getTemperatureNow = function(){return elementData.prototype.getTemperature()[0].y};
 			baseForecastData.prototype.getHumidityNow = function(){return elementData.prototype.getHumidity()[0].y};
 			baseForecastData.prototype.getPressureNow = function(){return elementData.prototype.getPressure()[0].y};
-			baseForecastData.prototype.getRainNow = function(){return elementData.prototype.getRain()[0].y};
-			baseForecastData.prototype.getSnowNow = function(){return elementData.prototype.getSnow()[0].y};
+			baseForecastData.prototype.getRainNow = function(){return baseForecastData.prototype.getRain()[0].y};
+			baseForecastData.prototype.getSnowNow = function(){return baseForecastData.prototype.getSnow()[0].y};
 			
 			baseForecastData.prototype.variableFree=function(){
 				elementData.prototype.variableFree();
@@ -395,9 +396,84 @@ var selectedButton=2;
 	});
 	*/
 	$(".sideMenu_button").on('click',function(){
-		 $(".side_menu_area").fadeToggle("slow");
+		 $(".side_menu_area").slideToggle("slow");
 	});
+
+//---------------------Time---------------------------------------
+function Zero(i){
+    ((i<10)?i="0"+i:i);
+    
+    return i;
+}
+
+function getMyTime(){
+    var dateNow = new Date();
+    var hourNow = Zero(dateNow.getHours());
+    var minuteNow = Zero(dateNow.getMinutes());
+    var secondNow = Zero(dateNow.getSeconds()+0,5);
+	var time = [];
+	time.push({date:dateNow,hour:hourNow,minute:minuteNow,second:secondNow});
+
+	return time;
+}
+function setTimeNow(){
+	var timeHtmlElement = document.getElementById("time");
+	var time = getMyTime();
+    timeHtmlElement.innerHTML = time[0].hour + ":" + time[0].minute + ":" + time[0].second;
 	
+	((time[0].hour==="00"&&time[0].minute==="01")?setDay():false);
+	((time[0].date.getDate()==="00"&&time[0].hour==="00"&&time[0].minute==="01")?setMonth():false);
+	((time[0].date.getMonth==="0"&&time[0].date.getDate()==="00"&&time[0].hour==="00"&&time[0].minute==="01")?setYear():false);
+}
+setInterval(setTimeNow,1000);
+
+function setDay(){
+	var time = new Date();
+	var dayOfWeek = Array(7);
+	dayOfWeek[0] = "Sunday";
+	dayOfWeek[1] = "Monday";
+	dayOfWeek[2] = "Tuesday";
+	dayOfWeek[3] = "Wednesday";
+	dayOfWeek[4] = "Thursday";
+	dayOfWeek[5] = "Friday";
+	dayOfWeek[6] = "Saturday";
+	
+	var dayHtmlElement = document.getElementById("day");
+	dayHtmlElement.innerHTML = dayOfWeek[time.getDay()];
+	var dateHtmlElement = document.getElementById("date_day");
+	dateHtmlElement.innerHTML = time.getDate();
+}
+setDay();
+//setInterval(setDay,86400000);
+
+function setMonth(){
+	var time = new Date();
+	var monthOfYear = Array(12);
+	monthOfYear[0] = "January";
+	monthOfYear[1] = "February";
+	monthOfYear[2] = "March";
+	monthOfYear[3] = "April";
+	monthOfYear[4] = "May";
+	monthOfYear[5] = "June";
+	monthOfYear[6] = "July";
+	monthOfYear[7] = "August";
+	monthOfYear[8] = "September";
+	monthOfYear[9] = "October";
+	monthOfYear[10] = "November";
+	monthOfYear[11] = "December";
+	
+	var monthHtmlElement = document.getElementById("month");
+	monthHtmlElement.innerHTML = monthOfYear[time.getMonth()];
+	}
+setMonth();
+
+function setYear(){
+	var time = new Date();
+	var yearHtmlElement = document.getElementById("year");
+	yearHtmlElement.innerHTML = time.getFullYear();
+}
+setYear();
+//---------------------END Time---------------------------------------
 	
 });
 //-------------------------------DOCUMENT READY SECTION END------------------------------------------------------------------------

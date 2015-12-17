@@ -114,6 +114,7 @@ function mergeObjects(obj1,obj2,obj3){
 			
 function update5DayCharts(response){
 	data5Day.variableFree();
+	console.log(response);
 	data5Day.fillVariables(response);	
 	var container = $('#container').highcharts();
 	if(!container){
@@ -148,18 +149,19 @@ function update5DayCharts(response){
 	var gauge3 = $('#3gauge').highcharts();
 	gauge3.series[0].points[0].update(data5Day.getPressureNow());
 	var gauge4 = $('#4gauge').highcharts();
-	gauge4.series[0].points[0].update(data5Day.getRain()+data5Day.getSnow());
+	gauge4.series[0].points[0].update(data5Day.getRainNow()+data5Day.getSnowNow());
 }
 function update16DayCharts(response){
 	data16Day.variableFree();
+	console.log(response);
 	data16Day.fillVariables(response);			
 	
 	var container = $('#container').highcharts();
 	
 	console.log(data16Day.getWeather_icon());
 	console.log(data16Day.getTemperature());
-	console.log(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data5Day.getWeather_icon()));
-	container.series[0].setData(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data5Day.getWeather_icon()));
+	console.log(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data16Day.getWeather_icon()));
+	container.series[0].setData(mergeObjects(data16Day.getTemperature(),data16Day.getWeather_description(),data16Day.getWeather_icon()));
 	container.series[1].setData(data16Day.getHumidity());
 	container.series[2].setData(data16Day.getRain());
 	container.series[3].setData(data16Day.getSnow());
@@ -178,6 +180,8 @@ function update16DayCharts(response){
 	gauge2.series[0].points[0].update(data16Day.getHumidityNow());
 	var gauge3 = $('#3gauge').highcharts();
 	gauge3.series[0].points[0].update(data16Day.getPressureNow());
+	var gauge4 = $('#4gauge').highcharts();
+	gauge4.series[0].points[0].update(data16Day.getRainNow()+data16Day.getSnowNow());
 }
 
 function showSearchSugestionResult(){

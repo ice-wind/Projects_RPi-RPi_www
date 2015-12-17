@@ -288,7 +288,12 @@
 	display: flex;  
 	-webkit-flex-flow: row;
 	flex-flow: row;
-	
+}
+.main_graphs_section_column{
+	width: -webkit-available;
+	width: -moz-available;
+	width: -o-available;
+	width:available;
 }
 .gadgets_set{
 	display: -webkit-flex;
@@ -555,4 +560,8 @@ table{
 .additional_menu{
 	flex:4;
 	display:flex;
+}
+/*------------------------------TIME---------------------------*/
+#year{
+border-bottom:1px gray solid;
 }

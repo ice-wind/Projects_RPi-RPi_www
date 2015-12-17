@@ -134,9 +134,9 @@
 					if(this.series.name == "Temp"){
 										description = '<div class="situation">'+situation+'</div>';
 						tooltip_all = 	['<div class="tooltip">'+Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>'+
-										description+'<br /><table  style="font-size: 90%"><tr><td>'+temp_picture_url+'Temperature</td><td>'+Highcharts.numberFormat(this.y, 2)+'</td></tr>'+
-										'<tr><td>'+hum_picture_url+'Humidity</td><td>'+Highcharts.numberFormat(this.point.humidity, 2)+'</td></tr>'+
-										'<tr><td>'+press_picture_url+'Pressure</td><td>'+Highcharts.numberFormat(this.point.pressure, 2)+'</td></tr>'+
+										description+'<br /><table  style="font-size: 90%"><tr><td>'+temp_picture_url+'Temperature</td><td>'+Highcharts.numberFormat(this.y, 2)+'ºC</td></tr>'+
+										'<tr><td>'+hum_picture_url+'Humidity</td><td>'+Highcharts.numberFormat(this.point.humidity, 2)+'%</td></tr>'+
+										'<tr><td>'+press_picture_url+'Pressure</td><td>'+Highcharts.numberFormat(this.point.pressure, 2)+'Pa</td></tr>'+
 										'</table></div>']
 					}				
 						return tooltip_all
@@ -650,7 +650,7 @@ var defaultGaugeOptions16Day = {
 							},
 							yAxis: {
 								min: 0,
-								max: 10,
+								max: 50,
 								minColor: '#99D6AD',
 								maxColor: '#005C1F',
 								title: {
