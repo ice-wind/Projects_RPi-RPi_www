@@ -33,8 +33,6 @@
 			Pressure=[];
 		};
 		elementData.prototype.fillVariables = function(JSONdata){
-			console.log(JSONdata);
-			console.log(JSONdata[0].Temperature_eve);
 			var setMoreTemperatureIn16Day;
 			if(!JSONdata[0].Temperature_eve){
 				setMoreTemperatureIn16Day=false;
@@ -48,6 +46,7 @@
 					Temperature.push({x:field.time,y:field.Temperature,humidity:field.Humidity,pressure:field.Pressure});
 					Temperature.push({x:field.time_eve,y:field.Temperature_eve});
 				}else{
+					console.log(field.time);
 					Temperature.push({x:field.time,y:field.Temperature,humidity:field.Humidity,pressure:field.Pressure});
 				}
 				Humidity.push({x:field.time,y:field.Humidity});
@@ -238,6 +237,21 @@ function loadJSON5Day(callback){
 		callback(result);
 	});
 }
+
+function getDayString(day){
+	(day>6)?day-=7:true;
+	var dayOfWeek = Array(7);
+	dayOfWeek[0] = "Sunday";
+	dayOfWeek[1] = "Monday";
+	dayOfWeek[2] = "Tuesday";
+	dayOfWeek[3] = "Wednesday";
+	dayOfWeek[4] = "Thursday";
+	dayOfWeek[5] = "Friday";
+	dayOfWeek[6] = "Saturday";
+	var dayString = dayOfWeek[day];
+	return dayString;
+}
+
 /*function loadScript(url, callback){
 			// Adding the script tag to the head as suggested before
 			var head = document.getElementsByTagName('head')[0];
@@ -427,19 +441,13 @@ function setTimeNow(){
 }
 setInterval(setTimeNow,1000);
 
+
+
 function setDay(){
 	var time = new Date();
-	var dayOfWeek = Array(7);
-	dayOfWeek[0] = "Sunday";
-	dayOfWeek[1] = "Monday";
-	dayOfWeek[2] = "Tuesday";
-	dayOfWeek[3] = "Wednesday";
-	dayOfWeek[4] = "Thursday";
-	dayOfWeek[5] = "Friday";
-	dayOfWeek[6] = "Saturday";
-	
+	console.log(time);
 	var dayHtmlElement = document.getElementById("day");
-	dayHtmlElement.innerHTML = dayOfWeek[time.getDay()];
+	dayHtmlElement.innerHTML = getDayString(time.getDay());
 	var dateHtmlElement = document.getElementById("date_day");
 	dateHtmlElement.innerHTML = time.getDate();
 }

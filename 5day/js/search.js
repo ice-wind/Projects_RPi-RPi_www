@@ -108,13 +108,11 @@ function mergeObjects(obj1,obj2,obj3){
 				objRET[i]=({x:obj1[i].x,y:obj1[i].y,humidity:obj1[i].humidity,pressure:obj1[i].pressure,w_desc:"",w_icon:""});
 			}	
 		}
-	console.log(objRET);
 	return objRET;
 }
 			
 function update5DayCharts(response){
 	data5Day.variableFree();
-	console.log(response);
 	data5Day.fillVariables(response);	
 	var container = $('#container').highcharts();
 	if(!container){
@@ -150,10 +148,43 @@ function update5DayCharts(response){
 	gauge3.series[0].points[0].update(data5Day.getPressureNow());
 	var gauge4 = $('#4gauge').highcharts();
 	gauge4.series[0].points[0].update(data5Day.getRainNow()+data5Day.getSnowNow());
+	
+	
+	updateSideBar(data5Day);
 }
+
+function updateSideBar(data){
+	var dateNow = new Date();
+	var nextDay = 26;
+	var todayHtmlElement=document.getElementById("today");
+	var firsDayHtmlElement=document.getElementById("firstDay");
+	var secondDayHtmlElement=document.getElementById("secondDay");
+	var thirdDayHtmlElement=document.getElementById("thirdDay");
+	var fourthDayHtmlElement=document.getElementById("fourthDay");
+	
+	console.log(data.getTemperature());
+	
+	for(var i=0;i!==nextDay;i++){
+		var dateForecast = new Date((data.getTemperature()[i].x)-288000000);
+		var forecastHours=dateForecast.getHours();
+		console.log(data.getTemperature()[i].x-28800000 +"----"+i+"---"+forecastHours + "---"+ 14);
+		if(forecastHours===14||forecastHours===12){
+				nextDay=i;
+				break; 
+			}
+	}
+	console.log(nextDay);
+	
+
+	todayHtmlElement.innerHTML = "Now: " +data.getTemperatureNow()+"ºC " + '<span style="align:center"> <img src="img/'+data.getWeather_icon()[0].y+'.png" title="" alt=""  height="25" width="22" align="center" style="margin:auto 0; float:right"></span>';
+	firsDayHtmlElement.innerHTML = getDayString(dateNow.getDay()+1)  +data.getTemperature()[nextDay+8].y+"ºC  "+ '<span style="align:center"> <img src="img/'+data.getWeather_icon()[nextDay+8].y+'.png" title="" alt=""  height="25" width="22" align="center" style="margin:auto 0; float:right"></span>';
+	secondDayHtmlElement.innerHTML = getDayString(dateNow.getDay()+2) +data.getTemperature()[nextDay+16].y+"ºC  "+  '<span style="align:center"> <img src="img/'+data.getWeather_icon()[nextDay+16].y+'.png" title="" alt=""  height="25" width="22" align="center" style="margin:auto 0; float:right"></span>';
+	thirdDayHtmlElement.innerHTML = getDayString(dateNow.getDay()+3) +data.getTemperature()[nextDay+24].y+"ºC  "+  '<span style="align:center"> <img src="img/'+data.getWeather_icon()[nextDay+24].y+'.png" title="" alt=""  height="25" width="22" align="center" style="margin:auto 0; float:right"></span>';
+	fourthDayHtmlElement.innerHTML = getDayString(dateNow.getDay()+4) + data.getTemperature()[nextDay+24].y+"ºC  "+ '<span style="align:center"> <img src="img/'+data.getWeather_icon()[nextDay+32].y+'.png" title="" alt=""  height="25" width="22" align="center" style="margin:auto 0; float:right"></span>';
+}
+
 function update16DayCharts(response){
 	data16Day.variableFree();
-	console.log(response);
 	data16Day.fillVariables(response);			
 	
 	var container = $('#container').highcharts();
