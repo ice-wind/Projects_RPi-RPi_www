@@ -5,6 +5,8 @@
   $password = "temp";
   $dbname = "graph_data";
 
+  //init
+    ini_set('max_execution_time', 15000);
   
   // Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
@@ -36,7 +38,7 @@
   
 		$url = 'http://api.openweathermap.org/data/2.5/forecast/daily?id=';
 		$url.= $CITY_ID;
-		$url.= '&APPID=42b4a1a0b8ea3a847fedd3c183ab4f2b&units=metric&mode=json&cnt=16'
+		$url.= '&APPID=42b4a1a0b8ea3a847fedd3c183ab4f2b&units=metric&mode=json&cnt=16';
 		
 		$jsondata = file_get_contents($url);
 		$data = json_decode($jsondata, true);
