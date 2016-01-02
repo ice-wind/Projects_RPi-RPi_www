@@ -4,9 +4,9 @@
 header('Content-Type: application/json');
 
 $servername = "localhost";
-$username = "Temp_user";
-$password = "temp";
-$dbname = "graph_data";
+$username = "pi";
+$password = "raspberry";
+$dbname = "rpi";
 
 $CITY_ID = $_GET["city_id"];
 
