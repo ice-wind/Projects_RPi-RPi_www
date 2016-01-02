@@ -4,9 +4,9 @@
 header('Content-Type: application/json');
 
 $servername = "localhost";
-$username = "Temp_user";
-$password = "temp";
-$dbname = "graph_data";
+$username = "pi";
+$password = "raspberry";
+$dbname = "rpi";
 
 
 $conn = mysqli_connect($servername,$username,$password,$dbname);
@@ -19,7 +19,7 @@ if (mysqli_connect_errno($conn))
 {
 	
     $data_points = array();
-	$select_city = $conn->prepare("SELECT TIME,HUMIDITY,PRESSURE,ALTITUDE,SEALEVEL,TEMPERATURE,TEMPERATURE_BMP FROM data ORDER BY TIME desc LIMIT 110");
+	$select_city = $conn->prepare("SELECT TIME,HUMIDITY,PRESSURE,ALTITUDE,SEALEVEL,TEMPERATURE,TEMPERATURE_BMP FROM SENSOR ORDER BY TIME desc LIMIT 110");
 	$select_city->execute();
 	$select_city->bind_result($TIME,$HUMIDITY,$PRESSURE,$ALTITUDE,$SEALEVEL,$TEMPERATURE,$TEMPERATURE_BMP);
 	$select_city->store_result();

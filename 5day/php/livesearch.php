@@ -1,9 +1,9 @@
 <?php
 
   $servername = "localhost";
-  $username = "Temp_user";
-  $password = "temp";
-  $dbname = "graph_data";
+  $username = "pi";
+  $password = "raspberry";
+  $dbname = "rpi";
 
   $q=$_GET["search_string"];
   $response=[];
@@ -13,7 +13,7 @@
 		if ($conn->connect_error) {
 			  die("Connection failed: " . $conn->connect_error);
 		}
-		$select_city = $conn->prepare("SELECT CITY_ID,NAME from cityid WHERE COUNTRY='SK'");
+		$select_city = $conn->prepare("SELECT CITY_ID,NAME from city_id WHERE COUNTRY='SK'");
 		if ($select_city->execute()) { 
 					} else {
 					   echo "Failde to connect to DB CITY  ";
